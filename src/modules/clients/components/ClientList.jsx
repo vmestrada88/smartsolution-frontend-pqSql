@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ShieldUser } from 'lucide-react';
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
@@ -12,7 +13,9 @@ const ClientList = () => {
     const fetchClients = async () => {
       try {
         const res = await axios.get('http://localhost:5000/api/clients');
-        setClients(res.data);
+  const data = Array.isArray(res.data) ? res.data : [];
+  const normalized = data.map(c => ({ ...c, _id: c._id ?? c.id }));
+  setClients(normalized);
       } catch (error) {
         console.error('Error fetching clients:', error);
       }
@@ -27,18 +30,22 @@ const ClientList = () => {
         <p>No clients avalible.</p>
       ) : (
         <ul className="divide-y divide-gray-300 border border-gray-300 rounded">
-          {clients.map(client => (
+          {clients.map(client => {
+            const cid = String(client._id || client.id);
+            return (
             <li
-              key={client._id}
-              className="p-4 hover:bg-teal-100 cursor-pointer"
-              onClick={() => navigate(`/clients/${client._id}`)}
-              
+              key={cid}
+              className="p-4 hover:bg-teal-100 cursor-pointer flex items-start gap-3"
+              onClick={() => navigate(`/clients/${cid}`)}
             >
-              <h3 className="text-xl font-semibold">{client.companyName || 'No Name'}</h3>
-              <p>{client.address}, {client.city}, {client.state} {client.zip}</p>
-              <p>Contacts: {client.contacts.length}</p>
+              <ShieldUser className="text-teal-600 mt-1" size={24} />
+              <div>
+                <h3 className="text-xl font-semibold">{client.companyName || 'No Name'}</h3>
+                <p>{client.address}, {client.city}, {client.state} {client.zip}</p>
+                <p>Contacts: {client.contacts?.length ?? 0}</p>
+              </div>
             </li>
-          ))}
+          );})}
         </ul>
       )}
     </div>

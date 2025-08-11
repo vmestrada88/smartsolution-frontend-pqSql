@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../../../services/productsService';
 import '../../../index.css';  
-import ProductCardGrid from '../components/ProductCardGrid';
-import logo from '../../../assets/logo.jpg';
+import ProductList from '../components/ProductList';
 import getLaborCost from '../../../util/LaborCost';
 
 
@@ -23,6 +22,18 @@ function Products() {
   
   const [products, setProducts] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+
+  const updateQuantity = (id, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromInvoice(id);
+      return;
+    }
+    setSelectedItems(
+      selectedItems.map(item =>
+        (item._id === id ? { ...item, quantity: newQuantity } : item)
+      )
+    );
+  };
 
   const addToInvoice = (product) => {
     const existing = selectedItems.find(item => item._id === product._id);
@@ -67,7 +78,23 @@ function Products() {
             return (
         <tr key={item._id || item.id || `${item.brand}-${item.model}`}>
                 <td className="border px-4 py-2">{item.name}</td>
-                <td className="border px-4 py-2 text-center">{item.quantity}</td>
+                <td className="border px-4 py-2 text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                      className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                    >
+                      -
+                    </button>
+                    <span className="min-w-[30px] text-center">{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                      className="bg-green-500 text-white px-2 py-1 rounded text-xs hover:bg-green-600"
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
                 <td className="border px-4 py-2 text-right">${item.priceSell.toFixed(2)}</td>
                 <td className="border px-4 py-2 text-right">${install.toFixed(2)}</td>
                 <td className="border px-4 py-2 text-right">
@@ -110,11 +137,9 @@ function Products() {
          Applicable taxes will be added as required by law.
       </p>
   
-            <ProductCardGrid
+            <ProductList
               products={products}
               addToInvoice={addToInvoice}
-              getLaborCost={getLaborCost}
-              logo={logo}
             />
       
 

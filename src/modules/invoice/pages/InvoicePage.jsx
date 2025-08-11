@@ -10,7 +10,7 @@ import logo from '../../../assets/logo.jpg';
 import DiscountForm from '../components/DiscountForm';
 import ExtraCostForm from '../components/ExtraCostForm';
 import InvoiceSummary from '../components/InvoiceSummary';
-import ProductCardGrid from '../../product/components/ProductCardGrid';
+import ProductList from '../../product/components/ProductList';
 import DownloadPDFButton from '../components/DownloadPDFButton';
 import ClientSelect from '../../clients/components/ClientSelect';
 import BasicInvoicePDF from '../../invoice/components/BasicInvoicePDF';
@@ -119,11 +119,9 @@ export const InvoicePage = () => {
     <div className="p-6 max-w-6xl mx-auto">
       <h2 className="text-2xl font-bold mb-6">Invoice or Propousal Generator</h2>
 
-      <ProductCardGrid
+      <ProductList
         products={products}
         addToInvoice={addToInvoice}
-        getLaborCost={getLaborCost}
-        logo={logo}
       />
 
       <div className="mb-4">
