@@ -6,7 +6,7 @@ export default function ProductCardGrid({ products, addToInvoice, getLaborCost, 
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
       {products.map((product) => (
         <div
-          key={product._id}
+          key={product._id || product.id || `${product.brand}-${product.model}`}
           className="bg-white rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition-shadow duration-200 flex"
         >
           <div className="flex-shrink-0">

@@ -13,7 +13,10 @@ function Products() {
   useEffect(() => {
       const loadProducts = async () => {
         const data = await fetchProducts();
-        setProducts(data);
+        const normalized = Array.isArray(data)
+          ? data.map(p => ({ ...p, _id: p._id ?? p.id }))
+          : [];
+        setProducts(normalized);
       };
       loadProducts();
     }, []);
@@ -59,10 +62,10 @@ function Products() {
           </tr>
         </thead>
         <tbody>
-          {selectedItems.map(item => {
+      {selectedItems.map(item => {
             const install = getLaborCost(item.category);
             return (
-              <tr key={item._id}>
+        <tr key={item._id || item.id || `${item.brand}-${item.model}`}>
                 <td className="border px-4 py-2">{item.name}</td>
                 <td className="border px-4 py-2 text-center">{item.quantity}</td>
                 <td className="border px-4 py-2 text-right">${item.priceSell.toFixed(2)}</td>

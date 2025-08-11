@@ -17,7 +17,7 @@ export default function ProductList({ products, addToInvoice }) {
 
             return (
               <li
-                key={p._id}
+                key={p._id || p.id || `${p.brand}-${p.model}`}
                 className="flex items-center justify-between bg-white shadow-sm px-4 py-2 rounded-md"
               >
                 <span>

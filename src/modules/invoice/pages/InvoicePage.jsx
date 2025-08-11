@@ -32,7 +32,11 @@ export const InvoicePage = () => {
   useEffect(() => {
     const loadProducts = async () => {
       const data = await fetchProducts();
-      setProducts(data);
+      // Normalize id field for UI components expecting _id
+      const normalized = Array.isArray(data)
+        ? data.map(p => ({ ...p, _id: p._id ?? p.id }))
+        : [];
+      setProducts(normalized);
     };
     loadProducts();
   }, []);
