@@ -5,7 +5,6 @@ import { fetchProducts } from '../../../services/productsService';
 import getLaborCost from '../../../util/LaborCost';
 import '../../../index.css';
 
-import logo from '../../../assets/logo.jpg';
 
 import DiscountForm from '../components/DiscountForm';
 import ExtraCostForm from '../components/ExtraCostForm';
@@ -86,7 +85,7 @@ export const InvoicePage = () => {
 
 
   const exportPDF = () => {
-    const { generatePDF } = BasicInvoicePDF({
+  const { generatePDF } = BasicInvoicePDF({
 
       clientName: selectedClient ? (selectedClient.companyName || selectedClient.name) : 'Not selected',
       clientAddress: selectedClient ? (selectedClient.companyAddress || selectedClient.address) : 'Not selected',
@@ -100,8 +99,7 @@ export const InvoicePage = () => {
       discount,
       documentType,
       notes,
-    },
-      console.log(selectedClient));
+  });
 
     generatePDF();
   };
@@ -147,7 +145,7 @@ export const InvoicePage = () => {
           Proposal
         </label>
       </div>
-      {console.log(documentType)}
+     
 
       <ClientSelect onSelectClient={setSelectedClient} />
 

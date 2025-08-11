@@ -9,7 +9,6 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
   export default function ClientDetails() {
 
   const { id } = useParams();
-  console.log("Client ID:", id);
   const navigate = useNavigate();
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -174,28 +173,28 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
             <input
               type="text"
               placeholder="Name"
-              value={contact.name}
+              value={contact.name ?? ''}
               onChange={e => updateContact(i, 'name', e.target.value)}
               className="w-full p-2 border rounded"
             />
             <input
               type="text"
               placeholder="Rol"
-              value={contact.role}
+              value={contact.role ?? ''}
               onChange={e => updateContact(i, 'role', e.target.value)}
               className="w-full p-2 border rounded"
             />
             <input
               type="text"
               placeholder="Teléfono"
-              value={contact.phone}
+              value={contact.phone ?? ''}
               onChange={e => updateContact(i, 'phone', e.target.value)}
               className="w-full p-2 border rounded"
             />
             <input
               type="email"
               placeholder="Email"
-              value={contact.email}
+              value={contact.email ?? ''}
               onChange={e => updateContact(i, 'email', e.target.value)}
               className="w-full p-2 border rounded"
             />
@@ -230,7 +229,7 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
 
       <section className="bg-white p-4 rounded shadow space-y-4">
         <h3 className="text-xl font-semibold">Completed jobs</h3>
-        {jobs.length === 0 ? (
+  {(jobs?.length ?? 0) === 0 ? (
           <p>No jobs recorded.</p>
         ) : (
           <ul className="space-y-4">

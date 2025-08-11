@@ -120,19 +120,6 @@ const totalLineCost = selectedItems.reduce(
   0
 );
 
-// autoTable(doc, {
-//   startY: y,
-//   head: [['Product', 'Qty', 'Price', 'Labor', 'Total']],
-//   body: productTable,
-//   foot: [[
-//     'Totals:',
-//     totalQuantity.toString(),
-//     `$${totalPrice.toFixed(2)}`,
-//     `$${totalLaborCost.toFixed(2)}`,
-//     `$${totalLineCost.toFixed(2)}`
-//   ]],
-//   footStyles: { fillColor: [220, 220, 220], textColor: 20, fontStyle: 'bold' },
-// });
 autoTable(doc, {
   startY: y,
   head: [['Product', 'Qty', 'Price', 'Labor', 'Total']],
@@ -213,6 +200,7 @@ autoTable(doc, {
 
   // Warranty disclaimer
   const warrantyText =
+    'Warranty Disclaimer: ' +
     'The installed equipment is covered by a limited warranty for a period of one (1) year from the date of installation. ' +
     'Labor is warranted for six (6) months. No warranty is provided for any equipment not supplied directly by our company.';
 
