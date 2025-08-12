@@ -1,0 +1,21 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo Using Node version from .nvmrc
+        - nvm install || echo Node already installed
+        - nvm use || echo Node already selected
+        - corepack enable
+        - yarn install --frozen-lockfile
+    build:
+      commands:
+        - yarn build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - ~/.cache/yarn/**/*

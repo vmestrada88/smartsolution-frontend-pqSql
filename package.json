@@ -1,6 +1,10 @@
 {
   "name": "smart-solution-starter",
   "version": "0.0.1",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
