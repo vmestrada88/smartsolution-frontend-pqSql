@@ -1,40 +1,35 @@
-// API service for products
-const API_URL = 'http://localhost:5000/api/products';
+import { API_CONFIG, fetchConfig } from './api';
+
+const BASE = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}`;
 
 export const fetchProducts = async () => {
-  const response = await fetch(API_URL);
-  if (!response.ok) throw new Error('Error fetching products');
-  return await response.json();
+  const res = await fetch(BASE, { ...fetchConfig });
+  if (!res.ok) throw new Error('Error fetching products');
+  return res.json();
 };
 
 export const createProduct = async (productData) => {
-  const response = await fetch(API_URL, {
+  const res = await fetch(BASE, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(productData),
+    ...fetchConfig,
+    body: JSON.stringify(productData)
   });
-  if (!response.ok) throw new Error('Error creating product');
-  return await response.json();
+  if (!res.ok) throw new Error('Error creating product');
+  return res.json();
 };
 
 export const updateProduct = async (id, productData) => {
-  const response = await fetch(`${API_URL}/${id}`, {
+  const res = await fetch(`${BASE}/${id}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(productData),
+    ...fetchConfig,
+    body: JSON.stringify(productData)
   });
-  if (!response.ok) throw new Error('Error updating product');
-  return await response.json();
+  if (!res.ok) throw new Error('Error updating product');
+  return res.json();
 };
 
 export const deleteProduct = async (id) => {
-  const response = await fetch(`${API_URL}/${id}`, {
-    method: 'DELETE',
-  });
-  if (!response.ok) throw new Error('Error deleting product');
-  return await response.json();
+  const res = await fetch(`${BASE}/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Error deleting product');
+  return res.json();
 };

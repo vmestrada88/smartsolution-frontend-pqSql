@@ -1,46 +1,41 @@
-// API service for clients
-const API_URL = 'http://localhost:5000/api/clients';
+import { API_CONFIG, fetchConfig } from './api';
+
+const BASE = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLIENTS}`;
 
 export const fetchClients = async () => {
-  const response = await fetch(API_URL);
-  if (!response.ok) throw new Error('Error fetching clients');
-  return await response.json();
+  const res = await fetch(BASE, { ...fetchConfig });
+  if (!res.ok) throw new Error('Error fetching clients');
+  return res.json();
 };
 
 export const createClient = async (clientData) => {
-  const response = await fetch(API_URL, {
+  const res = await fetch(BASE, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(clientData),
+    ...fetchConfig,
+    body: JSON.stringify(clientData)
   });
-  if (!response.ok) throw new Error('Error creating client');
-  return await response.json();
+  if (!res.ok) throw new Error('Error creating client');
+  return res.json();
 };
 
 export const updateClient = async (id, clientData) => {
-  const response = await fetch(`${API_URL}/${id}`, {
+  const res = await fetch(`${BASE}/${id}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(clientData),
+    ...fetchConfig,
+    body: JSON.stringify(clientData)
   });
-  if (!response.ok) throw new Error('Error updating client');
-  return await response.json();
+  if (!res.ok) throw new Error('Error updating client');
+  return res.json();
 };
 
 export const deleteClient = async (id) => {
-  const response = await fetch(`${API_URL}/${id}`, {
-    method: 'DELETE',
-  });
-  if (!response.ok) throw new Error('Error deleting client');
-  return await response.json();
+  const res = await fetch(`${BASE}/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Error deleting client');
+  return res.json();
 };
 
 export const getClientById = async (id) => {
-  const response = await fetch(`${API_URL}/${id}`);
-  if (!response.ok) throw new Error('Error fetching client');
-  return await response.json();
+  const res = await fetch(`${BASE}/${id}`);
+  if (!res.ok) throw new Error('Error fetching client');
+  return res.json();
 };
