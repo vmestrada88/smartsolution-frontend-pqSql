@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { apiMultipart, extractError } from '../../../services/httpClient';
 
 const ProductForm = () => {
   const [product, setProduct] = useState({
@@ -37,16 +37,14 @@ const ProductForm = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/products/create', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      await apiMultipart.post('/products/create', formData);
       setMessage('Producto creado correctamente ✅');
       setProduct({ name: '', price: '', description: '' });
       setImage(null);
       setPreview(null);
     } catch (error) {
       console.error(error);
-      setMessage('❌ Error al crear el producto');
+      setMessage('❌ Error al crear el producto: ' + extractError(error));
     }
   };
 

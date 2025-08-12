@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api, extractError } from '../../../services/httpClient';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import ButtonDelete from '../../../components/ui/ButtonDelete';
@@ -31,7 +30,7 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
   useEffect(() => {
     const fetchClient = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/clients/${id}`);
+        const res = await api.get(`/clients/${id}`);
         setClient(res.data);
         setCompanyName(res.data.companyName || '');
         setAddress(res.data.address || '');
@@ -52,7 +51,7 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
   // Save basic info
   const handleSaveBasicInfo = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/clients/${id}`, {
+      await api.put(`/clients/${id}`, {
         companyName,
         address,
         city,
@@ -98,7 +97,7 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
         equipmentInstalled: newJobEquipment ? newJobEquipment.split(',').map(s => s.trim()) : [],
         notes: newJobNotes,
       };
-      const res = await axios.post(`http://localhost:5000/api/clients/${id}/jobs`, newJob);
+      const res = await api.post(`/clients/${id}/jobs`, newJob);
       setJobs(res.data.jobs);
       setNewJobDate('');
       setNewJobDesc('');
@@ -113,7 +112,6 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
 
   if (loading) return <p className="p-6">Loanding client...</p>;
   if (!client) return <p className="p-6">Client no found</p>;
-
 
 
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api, extractError } from '../../../services/httpClient';
 import CreateClientForm from '../components/CreateClientForm';
 import ClientList from '../components/ClientList';
 import Button from '../../../components/ui/Button';
@@ -12,7 +12,7 @@ const Clients = () => {
 
   const fetchClients = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/clients');
+      const res = await api.get('/clients');
       setClients(res.data);
     } catch (err) {
       console.error('Error loading clients:', err);

@@ -1,7 +1,7 @@
 //smartsolution-frontend\src\shared\components\ClientList.jsx
 
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from '../../../services/httpClient';
 import { useNavigate } from 'react-router-dom';
 import { ShieldUser } from 'lucide-react';
 
@@ -12,7 +12,7 @@ const ClientList = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/clients');
+        const res = await api.get('/clients');
   const data = Array.isArray(res.data) ? res.data : [];
   const normalized = data.map(c => ({ ...c, _id: c._id ?? c.id }));
   setClients(normalized);

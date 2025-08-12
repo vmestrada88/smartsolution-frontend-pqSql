@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from '../../../services/httpClient';
 
 const ClientSelect = ({ onSelectClient }) => {
   const [clients, setClients] = useState([]);
@@ -8,7 +8,7 @@ const ClientSelect = ({ onSelectClient }) => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/clients');
+        const res = await api.get('/clients');
     const data = Array.isArray(res.data) ? res.data : [];
     // Normalize IDs so UI can rely on a single field and string values for <option value>
     const normalized = data.map((c) => ({ ...c, _id: c._id ?? c.id }));
