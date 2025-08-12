@@ -888,6 +888,11 @@ jsonwebtoken@^9.0.2:
     ms "^2.1.1"
     semver "^7.5.4"
 
+jspdf-autotable@^3.8.2:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/jspdf-autotable/-/jspdf-autotable-3.8.4.tgz#f7f05d45532ca94424a59cfa613309fff7c380a5"
+  integrity sha512-rSffGoBsJYX83iTRv8Ft7FhqfgEL2nLpGAIiqruEQQ3e4r0qdLFbPUB7N9HAle0I3XgpisvyW751VHCqKUVOgQ==
+
 jspdf@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/jspdf/-/jspdf-3.0.1.tgz#d81e1964f354f60412516eb2449ea2cccd4d2a3b"
