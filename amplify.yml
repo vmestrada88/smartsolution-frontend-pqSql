@@ -8,8 +8,10 @@ frontend:
         - nvm use || echo Node already selected
         - corepack enable
         - yarn install --frozen-lockfile
+        - export DISABLE_AWS_SDK=true
     build:
       commands:
+        - export DISABLE_AWS_SDK=true
         - yarn build
         - cp public/_redirects dist/_redirects
   artifacts:
