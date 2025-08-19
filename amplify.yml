@@ -1,4 +1,4 @@
-version: 1
+﻿version: 1
 frontend:
   phases:
     preBuild:
@@ -11,6 +11,7 @@ frontend:
     build:
       commands:
         - yarn build
+        - cp public/_redirects dist/_redirects
   artifacts:
     baseDirectory: dist
     files:
