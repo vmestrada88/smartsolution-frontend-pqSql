@@ -3,6 +3,7 @@ import { fetchProducts } from '../../../services/productsService';
 import '../../../index.css';  
 import ProductList from '../components/ProductList';
 import getLaborCost from '../../../util/LaborCost';
+import toast from 'react-hot-toast';
 
 
 
@@ -32,6 +33,7 @@ function Products() {
         (item._id === id ? { ...item, quantity: newQuantity } : item)
       )
     );
+    toast.success('Updated quantity');
   };
 
   const addToInvoice = (product) => {
@@ -45,6 +47,7 @@ function Products() {
     } else {
       setSelectedItems([...selectedItems, { ...product, quantity: 1 }]);
     }
+    toast.success('Product added');
   };
 
   const removeFromInvoice = (id) => {
@@ -54,14 +57,14 @@ function Products() {
   return (
     
     <div className="p-4">
-      {/* Encabezado */}
+      {/* Header */}
       <h1 className="text-2xl font-bold mb-4">Our Catalog</h1>
       <h2 className="text-gray-600 mb-6">
         <strong>Browse our selection of high-quality products. Click on a product to add it to your invoice
         and view installation costs.</strong>
       </h2>
 
-      {/* Tabla desktop */}
+      {/* table desktop */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="min-w-full mb-4 border-collapse text-sm">
           <thead>
@@ -114,7 +117,7 @@ function Products() {
         </table>
       </div>
 
-      {/* Lista de tarjetas móvil */}
+      {/* Mobile Card */}
       <div className="sm:hidden space-y-4">
         {selectedItems.map(item => {
           const install = getLaborCost(item.category);
@@ -139,7 +142,7 @@ function Products() {
                 <span>Install: ${install.toFixed(2)}</span>
                 <span>Total: ${(item.quantity * (item.priceSell + install)).toFixed(2)}</span>
               </div>
-              <button onClick={() => removeFromInvoice(item._id)} className="text-red-500 hover:text-red-700 text-xs">Eliminar</button>
+              <button onClick={() => removeFromInvoice(item._id)} className="text-red-500 hover:text-red-700 text-xs">Delete</button>
             </div>
           );
         })}
@@ -147,26 +150,30 @@ function Products() {
 
       {/* Tarjeta de totales generales */}
       {selectedItems.length > 0 && (
-        <div className="bg-teal-50 rounded shadow p-4 border mt-4 max-w-md mx-auto">
+        <div className="sm:hidden bg-teal-50 rounded shadow p-4 border mt-4 max-w-md mx-auto">
           <h3 className="text-lg font-bold mb-2 text-teal-700">Totales Generales</h3>
           <div className="space-y-1 text-gray-800 text-sm">
             <div>
-              <span className="font-semibold">Cantidad total:</span> {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
+              <span className="font-semibold">Cantidad total:</span>
+               {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
             </div>
             <div>
-              <span className="font-semibold">Precio total:</span> ${selectedItems.reduce((sum, item) => sum + item.priceSell, 0).toFixed(2)}
+              <span className="font-semibold">Precio total:</span>
+               ${selectedItems.reduce((sum, item) => sum + item.priceSell, 0).toFixed(2)}
             </div>
             <div>
-              <span className="font-semibold">Instalación total:</span> ${selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0).toFixed(2)}
+              <span className="font-semibold">Instalación total:</span>
+               ${selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0).toFixed(2)}
             </div>
             <div>
-              <span className="font-semibold">Total general:</span> ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
+              <span className="font-semibold">Total general:</span>
+               ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
             </div>
           </div>
         </div>
       )}
 
-      {/* Lista de productos para agregar */}
+     
       <ProductList
         products={products}
         addToInvoice={addToInvoice}
