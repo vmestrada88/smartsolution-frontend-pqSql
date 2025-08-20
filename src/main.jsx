@@ -8,8 +8,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <>
       <App />
-      <Toaster position="top-center"
-        reverseOrder={false} />
+      <Toaster position="top-right"
+        // reverseOrder={false}
+         />
 
     </>
   </React.StrictMode>

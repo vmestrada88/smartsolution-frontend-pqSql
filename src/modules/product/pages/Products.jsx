@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../../../services/productsService';
 import '../../../index.css';  
 import ProductList from '../components/ProductList';
-import getLaborCost from '../../../util/LaborCost';
 import toast from 'react-hot-toast';
-
-
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import logo from '../../../assets/logo.jpg';
+import getLaborCost from '../../../util/LaborCost';
 
 function Products() {
 
@@ -54,6 +55,94 @@ function Products() {
     setSelectedItems(selectedItems.filter(item => item._id !== id));
   };
 
+  const exportProductsPDF = () => {
+    const doc = new jsPDF();
+    let y = 20;
+
+    // Company Header
+    if (logo) {
+      doc.addImage(logo, 'JPEG', 14, y, 30, 30);
+    }
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('Smart Solution for Living LLC', 50, y + 8);
+
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('Security Systems, Smart Homes, & Networking Company', 50, y + 16);
+    doc.text('Tel: +1 (786) 824-4191', 50, y + 24);
+    doc.text('Email: comercial@smartsolutionfl.com', 50, y + 30);
+    doc.text('Address: 2438 NE 184 St, North Miami Beach, FL 33160', 50, y + 36);
+
+    y += 50;
+
+    // Date and Time
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US');
+    const timeStr = now.toLocaleTimeString('en-US');
+    doc.setFontSize(10);
+    doc.text(`Date: ${dateStr}  Time: ${timeStr}`, 200, 12, { align: 'right' });
+
+    // Cuerpo de la tabla igual que la flotante
+    const productTable = selectedItems.map(item => [
+      item.name,
+      item.quantity,
+      `${item.priceSell.toFixed(2)}\nx ${item.quantity} = ${(item.priceSell * item.quantity).toFixed(2)}`,
+      `${getLaborCost(item.category).toFixed(2)}\nx ${item.quantity} = ${(getLaborCost(item.category) * item.quantity).toFixed(2)}`,
+      `${(item.quantity * (item.priceSell + getLaborCost(item.category))).toFixed(2)}`
+    ]);
+
+    // Pie de la tabla igual que el tfoot flotante
+    const tableFooter = [
+      [
+        'Total:',
+        selectedItems.reduce((sum, item) => sum + item.quantity, 0),
+        `$${selectedItems.reduce((sum, item) => sum + (item.priceSell * item.quantity), 0).toFixed(2)}`,
+        `$${selectedItems.reduce((sum, item) => sum + (getLaborCost(item.category) * item.quantity), 0).toFixed(2)}`,
+        `$${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}`
+      ]
+    ];
+
+    autoTable(doc, {
+      startY: y,
+      head: [['Product', 'Qty', 'Unit Price', 'Install', 'Total']],
+      body: productTable,
+      foot: tableFooter,
+      headStyles: { fillColor: [0, 128, 128], textColor: [255, 255, 255], fontStyle: 'bold' },
+      footStyles: { fillColor: [220, 220, 220], textColor: 20, fontStyle: 'bold' },
+      styles: { fontSize: 10 },
+    });
+
+    y = doc.lastAutoTable.finalY + 10;
+    doc.setFont(undefined, 'bold');
+    doc.setFontSize(12);
+    doc.text(`Subtotal: $${totalLineCost.toFixed(2)}`, 200, y, { align: 'right' });
+    y += 8;
+    const tax = totalLineCost * 0.07;
+    doc.text(`Tax (7%): $${tax.toFixed(2)}`, 200, y, { align: 'right' });
+    y += 8;
+    doc.text(`Total: $${(totalLineCost + tax).toFixed(2)}`, 200, y, { align: 'right' });
+    y += 10;
+
+    // Warranty Disclaimer
+    const warrantyText = 
+      'Warranty Disclaimer: ' +
+      'The installed equipment is covered by a limited warranty for a period of one (1) year from the date of installation. ' +
+      'Labor is warranted for six (6) months. No warranty is provided for any equipment not supplied directly by our company.</p>';
+
+    const splitText = doc.splitTextToSize(warrantyText, 180);
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'normal');
+    doc.text(splitText, 14, y);
+
+    doc.save('proposal.pdf');
+  };
+
+  const totalLineCost = selectedItems.reduce(
+    (sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))),
+    0
+  );
+
   return (
     
     <div className="p-4">
@@ -64,92 +153,87 @@ function Products() {
         and view installation costs.</strong>
       </h2>
 
-      {/* table desktop */}
-      <div className="hidden sm:block overflow-x-auto">
-        <table className="min-w-full mb-4 border-collapse text-sm">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border px-4 py-2">Product</th>
-              <th className="border px-4 py-2">Qty</th>
-              <th className="border px-4 py-2">Unit Price</th>
-              <th className="border px-4 py-2">Install</th>
-              <th className="border px-4 py-2">Total</th>
-              <th className="border px-4 py-2">Remove</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selectedItems.map(item => {
-              const install = getLaborCost(item.category);
-              return (
-                <tr key={item._id}>
-                  <td className="border px-4 py-2">{item.name}</td>
-                  <td className="border px-4 py-2 text-center">{item.quantity}</td>
-                  <td className="border px-4 py-2 text-right">${item.priceSell.toFixed(2)}</td>
-                  <td className="border px-4 py-2 text-right">${install.toFixed(2)}</td>
-                  <td className="border px-4 py-2 text-right">
-                    ${(item.quantity * (item.priceSell + install)).toFixed(2)}
-                  </td>
-                  <td className="border px-4 py-2 text-center">
-                    <button onClick={() => removeFromInvoice(item._id)} className="text-red-500 hover:text-red-700">✕</button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-          <tfoot>
-            <tr className="bg-gray-200 font-bold">
-              <td className="border px-4 py-2 text-right">Totals:</td>
-              <td className="border px-4 py-2 text-center">
-                {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
-              </td>
-              <td className="border px-4 py-2 text-right">
-                ${selectedItems.reduce((sum, item) => sum + item.priceSell, 0).toFixed(2)}
-              </td>
-              <td className="border px-4 py-2 text-right">
-                ${selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0).toFixed(2)}
-              </td>
-              <td className="border px-4 py-2 text-right">
-                ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
-              </td>
-              <td className="border px-4 py-2"></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
-      {/* Mobile Card */}
-      <div className="sm:hidden space-y-4">
-        {selectedItems.map(item => {
-          const install = getLaborCost(item.category);
-          return (
-            <div key={item._id} className="bg-white rounded shadow p-3 border">
-              <div className="font-bold text-gray-800 mb-1">{item.name}</div>
-              <div className="flex flex-wrap gap-2 text-sm text-gray-700 mb-2 items-center">
-                <span>Cantidad:</span>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                    className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
-                    disabled={item.quantity <= 1}
-                  >-</button>
-                  <span className="min-w-[30px] text-center">{item.quantity}</span>
-                  <button
-                    onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                    className="bg-green-500 text-white px-2 py-1 rounded text-xs hover:bg-green-600"
-                  >+</button>
-                </div>
-                <span>Unit: ${item.priceSell.toFixed(2)}</span>
-                <span>Install: ${install.toFixed(2)}</span>
-                <span>Total: ${(item.quantity * (item.priceSell + install)).toFixed(2)}</span>
-              </div>
-              <button onClick={() => removeFromInvoice(item._id)} className="text-red-500 hover:text-red-700 text-xs">Delete</button>
-            </div>
-          );
-        })}
+      {/* Tabla flotante */}
+      <div className="sticky top-0 z-30 bg-white shadow-md">
+        <div className={`overflow-x-auto ${selectedItems.length > 3 ? 'max-h-56 overflow-y-auto' : ''}`}>
+          <table className="min-w-full border-collapse text-xs">
+            <thead>
+              <tr>
+                <th className="border px-1 py-2">Product</th>
+                <th className="border px-1 py-2">Qty</th>
+                <th className="border px-1 py-2">Unit Price</th>
+                <th className="border px-1 py-2">Install</th>
+                <th className="border px-1 py-2">Total</th>
+                <th className="border px-1 py-2 w-12">Del</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedItems.map(item => {
+                const install = getLaborCost(item.category);
+                return (
+                  <tr key={item._id}>
+                    <td className="border px-1 py-2">{item.name}</td>
+                    <td className="border px-1 py-2 text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <button
+                          onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                          className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                          disabled={item.quantity <= 1}
+                        >-</button>
+                        <span className="min-w-[30px] text-center">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                          className="bg-green-500 text-white px-2 py-1 rounded text-xs hover:bg-green-600"
+                        >+</button>
+                      </div>
+                    </td>
+                    <td className="border px-1 py-2 text-right">
+                      ${item.priceSell.toFixed(2)}<br />
+                      <span className="text-xs text-gray-500">x {item.quantity} = ${(item.priceSell * item.quantity).toFixed(2)}</span>
+                    </td>
+                    <td className="border px-1 py-2 text-right">
+                      ${install.toFixed(2)}<br />
+                      <span className="text-xs text-gray-500">x {item.quantity} = ${(install * item.quantity).toFixed(2)}</span>
+                    </td>
+                    <td className="border px-1 py-2 text-right">
+                      ${(item.quantity * (item.priceSell + install)).toFixed(2)}
+                    </td>
+                    <td className="border px-1 py-2 text-center w-12">
+                      <button
+                        onClick={() => removeFromInvoice(item._id)}
+                        className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                        aria-label="Eliminar"
+                        style={{ minWidth: '24px', minHeight: '24px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                      >✕</button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr className="bg-gray-200 font-bold">
+                <td className="border px-2 py-2 sm:px-4 text-right">Total:</td>
+                <td className="border px-2 py-2 sm:px-4 text-center">
+                  {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
+                </td>
+                <td className="border px-2 py-2 sm:px-4 text-right">
+                  ${selectedItems.reduce((sum, item) => sum + (item.priceSell * item.quantity), 0).toFixed(2)}
+                </td>
+                <td className="border px-2 py-2 sm:px-4 text-right">
+                  ${selectedItems.reduce((sum, item) => sum + (getLaborCost(item.category) * item.quantity), 0).toFixed(2)}
+                </td>
+                <td className="border px-2 py-2 sm:px-4 text-right">
+                  ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
+                </td>
+                <td className="border px-2 py-2 sm:px-4"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
 
       {/* Tarjeta de totales generales */}
-      {selectedItems.length > 0 && (
+      {/* {selectedItems.length > 0 && (
         <div className="sm:hidden bg-teal-50 rounded shadow p-4 border mt-4 max-w-md mx-auto">
           <h3 className="text-lg font-bold mb-2 text-teal-700">Totales Generales</h3>
           <div className="space-y-1 text-gray-800 text-sm">
@@ -171,13 +255,23 @@ function Products() {
             </div>
           </div>
         </div>
+      )} */}
+      {selectedItems.length > 0 && (
+        <div className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-md">
+          <button
+            onClick={exportProductsPDF}
+            className="w-full bg-teal-600 text-white px-4 py-3 rounded-none shadow hover:bg-teal-700"
+          >
+            Exportar PDF
+          </button>
+        </div>
       )}
-
-     
+      {/* Lista de productos para agregar */}
       <ProductList
         products={products}
         addToInvoice={addToInvoice}
       />
+
     </div>
   );
 }
