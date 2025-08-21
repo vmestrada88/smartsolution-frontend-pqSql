@@ -23,6 +23,12 @@ function Products() {
   
   const [products, setProducts] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [showProposalForm, setShowProposalForm] = useState(false);
+  const [proposalData, setProposalData] = useState({
+    name: '',
+    contact: '',
+    address: ''
+  });
 
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity <= 0) {
@@ -153,9 +159,9 @@ function Products() {
         and view installation costs.</strong>
       </h2>
 
-      {/* Tabla flotante */}
+      {/*  Table Floating */}
       <div className="sticky top-0 z-30 bg-white shadow-md">
-        <div className={`overflow-x-auto ${selectedItems.length > 3 ? 'max-h-56 overflow-y-auto' : ''}`}>
+        <div className={`overflow-x-auto ${selectedItems.length > 2 ? 'max-h-56 overflow-y-auto' : ''}`}>
           <table className="min-w-full border-collapse text-xs">
             <thead>
               <tr>
@@ -210,6 +216,7 @@ function Products() {
                 );
               })}
             </tbody>
+            {/* Table footer */}
             <tfoot>
               <tr className="bg-gray-200 font-bold">
                 <td className="border px-2 py-2 sm:px-4 text-right">Total:</td>
@@ -227,46 +234,32 @@ function Products() {
                 </td>
                 <td className="border px-2 py-2 sm:px-4"></td>
               </tr>
+              {/* Buttons */}
+              <tr>
+                <td colSpan={6} className="border px-2 py-2 sm:px-4 text-right">
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={exportProductsPDF}
+                      className="bg-teal-600 text-white px-4 py-2 rounded shadow hover:bg-teal-700"
+                    >
+                      Save PDF Proposal
+                    </button>
+                    <button
+                      onClick={() => setShowProposalForm(true)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
+                    >
+                      Send Proposal
+                    </button>
+                  </div>
+                </td>
+              </tr>
             </tfoot>
           </table>
         </div>
       </div>
 
-      {/* Tarjeta de totales generales */}
-      {/* {selectedItems.length > 0 && (
-        <div className="sm:hidden bg-teal-50 rounded shadow p-4 border mt-4 max-w-md mx-auto">
-          <h3 className="text-lg font-bold mb-2 text-teal-700">Totales Generales</h3>
-          <div className="space-y-1 text-gray-800 text-sm">
-            <div>
-              <span className="font-semibold">Cantidad total:</span>
-               {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
-            </div>
-            <div>
-              <span className="font-semibold">Precio total:</span>
-               ${selectedItems.reduce((sum, item) => sum + item.priceSell, 0).toFixed(2)}
-            </div>
-            <div>
-              <span className="font-semibold">Instalación total:</span>
-               ${selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0).toFixed(2)}
-            </div>
-            <div>
-              <span className="font-semibold">Total general:</span>
-               ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
-            </div>
-          </div>
-        </div>
-      )} */}
-      {selectedItems.length > 0 && (
-        <div className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-md">
-          <button
-            onClick={exportProductsPDF}
-            className="w-full bg-teal-600 text-white px-4 py-3 rounded-none shadow hover:bg-teal-700"
-          >
-            Exportar PDF
-          </button>
-        </div>
-      )}
-      {/* Lista de productos para agregar */}
+
+      {/* Product List */}
       <ProductList
         products={products}
         addToInvoice={addToInvoice}
