@@ -38,3 +38,27 @@ export const apiCall = async (endpoint, options = {}) => {
   }
   return await response.json();
 };
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+// Ejemplo de función para hacer una petición GET
+export const fetchData = async (endpoint) => {
+  const response = await fetch(`${API_URL}/${endpoint}`);
+  if (!response.ok) {
+    throw new Error('Error en la petición');
+  }
+  return response.json();
+};
+
+// Ejemplo de función para hacer una petición POST
+export const postData = async (endpoint, data) => {
+  const response = await fetch(`${API_URL}/${endpoint}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    throw new Error('Error en la petición');
+  }
+  return response.json();
+};

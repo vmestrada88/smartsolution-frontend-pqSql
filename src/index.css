@@ -3,9 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @media print {
-  .no-print {
-    display: none !important;
-  }
-}
+/**
+ * @jdoc
+ * This section provides documentation for the CSS file.
+ * Explanation:
+ * - Describes the main purpose and usage context of the styles defined in
+ this file.
+ * - Details any important considerations for maintaining or extending the styles.
+ * - Use this comment to understand the functionality and facilitate future study 
+ or updates.
  */

@@ -1,3 +1,9 @@
+/**
+ * Footer component for displaying copyright information.
+ * @module components/layout/Footer
+ * @description Renders the application footer with company copyright.
+ * @returns {JSX.Element} Footer element.
+ */
 import React from "react";
 
 const Footer = () => {

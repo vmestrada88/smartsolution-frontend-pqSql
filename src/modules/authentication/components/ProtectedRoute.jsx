@@ -1,3 +1,13 @@
+
+/**
+ * ProtectedRoute component restricts access to its children based on user authentication and allowed roles.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {React.ReactNode} props.children - The content to render if access is allowed.
+ * @param {string[]} props.allowedRoles - Array of roles permitted to access the route.
+ * @returns {React.ReactNode} - Renders children if user is authenticated and has an allowed role, otherwise redirects.
+ */
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 

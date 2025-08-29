@@ -1,3 +1,9 @@
+/**
+ * Header component for displaying the application logo, navigation links, and user info.
+ * @module components/layout/Header
+ * @description Renders the header with navigation based on user role and authentication status.
+ * @returns {JSX.Element} Header element.
+ */
 import React from 'react';
 import logo from '../../assets/logo.jpg';
 import { Link, useNavigate } from 'react-router-dom';

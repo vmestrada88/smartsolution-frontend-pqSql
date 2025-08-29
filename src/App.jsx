@@ -1,8 +1,17 @@
+/**
+ * App.jsx - Main application component for Smart Solution frontend.
+ * 
+ * This component sets up the React Router, global layout (Header, Footer, Contact),
+ * and all route definitions for the app, including protected routes for different user roles.
+ * 
+ * @module App
+ */
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Footer from './components/layout/Footer';
-import Contact from './components/Contact';
+import Contact from './components/ui/Contact';
 import Header from './components/layout/Header';
 
 import Home from './modules/landing/Home';
@@ -12,9 +21,8 @@ import ClientDetails from './modules/clients/components/ClientDetails';
 
 import { InvoicePage } from './modules/invoice/pages/InvoicePage';
 import Login from './modules/authentication/pages/Login';
-import AdminDashboard from './modules/authentication/pages/Admin';
-import Profile from './modules/authentication/pages/Profile';
-import Unauthorized from './modules/authentication/pages/Unauthorized';
+// import Profile from './modules/authentication/pages/Profile';
+// import Unauthorized from './modules/authentication/pages/Unauthorized';
 
 
 import ProtectedRoute from './modules/authentication/components/ProtectedRoute';
@@ -30,7 +38,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
+            {/* <Route path="/unauthorized" element={<Unauthorized />} /> */}
 
             {/* ADMIN */}
             <Route
@@ -58,24 +66,17 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+           
 
             {/* CLIENT */}
-            <Route
+            {/* <Route
               path="/profile"
               element={
                 <ProtectedRoute allowedRoles={['client']}>
                   <Profile />
                 </ProtectedRoute>
               }
-            />
+            /> */}
           </Routes>
           <Contact />
         </main>

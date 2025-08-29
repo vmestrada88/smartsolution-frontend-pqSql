@@ -1,8 +1,40 @@
+/**
+ * ClientDetails component displays and manages the details of a single client.
+ * 
+ * Features:
+ * - Fetches client data from the API using the client ID from the URL.
+ * - Allows editing and saving of basic client information (company name, address, city, state, zip).
+ * - Manages a dynamic list of contacts (add, update, delete).
+ * - Displays a list of completed jobs for the client.
+ * - Allows adding new jobs with date, description, installed equipment, and notes.
+ * - Handles loading and error states.
+ * 
+ * State Variables:
+ * - client: Object containing all client data.
+ * - loading: Boolean indicating if data is being fetched.
+ * - companyName, address, city, state, zip: Strings for basic info.
+ * - contacts: Array of contact objects.
+ * - jobs: Array of job objects.
+ * - newJobDesc, newJobDate, newJobEquipment, newJobNotes: Strings for new job form.
+ * 
+ * API Endpoints Used:
+ * - GET /clients/:id - Fetch client details.
+ * - PUT /clients/:id - Update client basic info and contacts.
+ * - POST /clients/:id/jobs - Add a new job for the client.
+ * 
+ * UI Components Used:
+ * - Button: For navigation and actions.
+ * - ButtonDelete: For deleting contacts.
+ * 
+ * @component
+ * @returns {JSX.Element} The client details page.
+ */
 import React, { useEffect, useState } from 'react';
 import { api, extractError } from '../../../services/httpClient';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import ButtonDelete from '../../../components/ui/ButtonDelete';
+import toast from 'react-hot-toast';
 
 // const ClientDetails = () => {
   export default function ClientDetails() {
@@ -59,9 +91,9 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
         zip,
         contacts,
       });
-      alert('Updated Info');
+      toast.success('Updated Info');
     } catch (error) {
-      alert('Error updating client');
+      toast.error('Error updating client');
       console.error(error);
     }
   };
@@ -87,7 +119,7 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
   // add new job
   const addJob = async () => {
     if (!newJobDate || !newJobDesc) {
-      alert('Date and descripdton are mandatory fields');
+      toast.error('Date and description are mandatory fields');
       return;
     }
     try {
@@ -103,9 +135,9 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
       setNewJobDesc('');
       setNewJobEquipment('');
       setNewJobNotes('');
-      alert('Job Added');
+      toast.success('Job Added');
     } catch (error) {
-      alert('Error adding job');
+      toast.error('Error adding job');
       console.error(error);
     }
   };
@@ -126,6 +158,7 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
       <h2 className="text-3xl font-bold">Client: {companyName || 'No name'}</h2>
 
       <section className="bg-white p-4 rounded shadow space-y-4">
+        <div>
         <h3 className="text-xl font-semibold">Basic Info</h3>
         <input
           type="text"
@@ -198,36 +231,25 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
             />
             <ButtonDelete
               onClick={() => removeContact(i)}
-  
-        >            
+            >            
               Delete Contact
             </ButtonDelete>
           </div>
         ))}
         <Button
           onClick={addContact}
-          className="px-4 py-2 bg-green-600
-           text-white rounded
-            text-sm font-bold 
-           hover:bg-green-800"
         >
           Add Contact
         </Button>
-
-        <Button
-          onClick={handleSaveBasicInfo}
-          className="px-4 py-2 bg-green-600
-           text-white rounded
-            text-sm font-bold 
-           hover:bg-green-800"
-        >
+</div>
+        <Button onClick={handleSaveBasicInfo}  >
           Save
         </Button>
       </section>
 
       <section className="bg-white p-4 rounded shadow space-y-4">
         <h3 className="text-xl font-semibold">Completed jobs</h3>
-  {(jobs?.length ?? 0) === 0 ? (
+        {(jobs?.length ?? 0) === 0 ? (
           <p>No jobs recorded.</p>
         ) : (
           <ul className="space-y-4">
@@ -273,12 +295,49 @@ import ButtonDelete from '../../../components/ui/ButtonDelete';
           />
           <Button
             onClick={addJob}
-          // className="bg-green-600 text-white px-6 py-2 rounded"
           >
             Add Job
           </Button>
         </div>
       </section>
+
+      <ButtonDelete
+        onClick={async () => {
+            toast(
+              (t) => (
+              <div>
+                <p>Are you sure you want to delete this client?</p>
+                <div className="mt-2 flex gap-2">
+                <Button
+                  onClick={async () => {
+                  try {
+                    await api.delete(`/clients/${id}`);
+                    toast.dismiss(t.id);
+                    toast.success('Client deleted');
+                    navigate(-1);
+                  } catch (error) {
+                    toast.dismiss(t.id);
+                    toast.error('Error deleting client');
+                    console.error(error);
+                  }
+                  }}
+                >
+                  Yes, Delete
+                </Button>
+                <ButtonDelete
+                  onClick={() => toast.dismiss(t.id)}
+                >
+                  Cancel
+                </ButtonDelete>
+                </div>
+              </div>
+              ),
+              { duration: 10000 }
+            );
+        }}
+      >
+        Delete Client
+      </ButtonDelete>
     </div>
   );
 };
