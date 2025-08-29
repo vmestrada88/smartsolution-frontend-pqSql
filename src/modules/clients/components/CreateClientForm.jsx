@@ -79,6 +79,3 @@ const CreateClientForm = () => {
       </form>
     </div>
   );
-};
-
-export default CreateClientForm;
