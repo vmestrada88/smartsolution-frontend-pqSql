@@ -9,7 +9,10 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "cypress run"
   },
   "dependencies": {
     "axios": "^1.7.7",
@@ -29,7 +32,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.1",
     "autoprefixer": "^10.4.14",
-    "cypress": "^15.0.0",
+    "cypress": "^15.1.0",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "vite": "^5.0.0"
