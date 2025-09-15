@@ -6,12 +6,6 @@ import logo from '../../assets/logo.jpg';
 import ContactModal from './components/ContactModal';
 import Services from './components/Services';
 
-
-
-
-
-
-
 export default function Home() {
     const [modalOpen, setModalOpen] = useState(false);
 
