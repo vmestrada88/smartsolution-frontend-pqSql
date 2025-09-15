@@ -21,8 +21,7 @@ describe('Home Page', () => {
 
   it('should open the contact modal when Contact Us button is clicked', () => {
     cy.contains('button', 'Contact Us').click();
-    // El modal usa 'fixed inset-0' para el overlay, así que verifica ese selector
-    cy.get('.fixed.inset-0').should('be.visible');
+    cy.get('[data-cy="contact-modal"]').should('be.visible');
   });
 
   it('should display the Services component', () => {
