@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../../../services/httpClient';
+import { api } from '../../../services';
 
 const ClientSelect = ({ onSelectClient }) => {
   const [clients, setClients] = useState([]);

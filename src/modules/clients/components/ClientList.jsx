@@ -1,7 +1,7 @@
 //smartsolution-frontend\src\shared\components\ClientList.jsx
 
 import React, { useEffect, useState } from 'react';
-import { api } from '../../../services/httpClient';
+import { api } from '../../../services';
 import { useNavigate } from 'react-router-dom';
 import { ShieldUser } from 'lucide-react';
 

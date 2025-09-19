@@ -23,7 +23,7 @@
  * - LoginForm: Receives email, password, setters, handleLogin, and navigate as props.
  */
 import React, { useState } from 'react';
-import { api, extractError } from '../../../services/httpClient';
+import { api, extractError } from '../../../services';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 import toast from 'react-hot-toast';
