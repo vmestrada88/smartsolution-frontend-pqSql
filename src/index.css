@@ -3,6 +3,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Toast Button Styles */
+.toast-button {
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border: 2px solid;
+}
+
+.toast-button.primary {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.toast-button.primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.toast-button.dismiss {
+  background: #ef4444;
+  border-color: #ef4444;
+}
+
+.toast-button.dismiss:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Mobile Menu Styles */
+.mobile-menu-enter {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.mobile-menu-enter-active {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.mobile-menu-exit {
+  max-height: 500px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.mobile-menu-exit-active {
+  max-height: 0;
+  opacity: 0;
+}
+
 /**
  * @jdoc
  * This section provides documentation for the CSS file.
@@ -10,6 +67,6 @@
  * - Describes the main purpose and usage context of the styles defined in
  this file.
  * - Details any important considerations for maintaining or extending the styles.
- * - Use this comment to understand the functionality and facilitate future study 
+ * - Use this comment to understand the functionality and facilitate future study
  or updates.
  */

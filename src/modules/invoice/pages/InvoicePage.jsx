@@ -85,7 +85,7 @@ export const InvoicePage = () => {
 
 
   const exportPDF = () => {
-  const { generatePDF } = BasicInvoicePDF({
+    const { generatePDF } = BasicInvoicePDF({
 
       clientName: selectedClient ? (selectedClient.companyName || selectedClient.name) : 'Not selected',
       clientAddress: selectedClient ? (selectedClient.companyAddress || selectedClient.address) : 'Not selected',
@@ -99,7 +99,7 @@ export const InvoicePage = () => {
       discount,
       documentType,
       notes,
-  });
+    });
 
     generatePDF();
   };
@@ -145,7 +145,7 @@ export const InvoicePage = () => {
           Proposal
         </label>
       </div>
-     
+
 
       <ClientSelect onSelectClient={setSelectedClient} />
 

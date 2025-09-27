@@ -1,6 +1,7 @@
 {
   "name": "smart-solution-starter",
   "version": "0.0.1",
+  "type": "module",
   "license": "UNLICENSED",
   "author": "Victor Estrada",
   "engines": {
@@ -12,6 +13,7 @@
     "preview": "vite preview",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
+    "cypress:run:all": "cypress run --spec 'cypress/e2e/*.cy.js'",
     "test:e2e": "cypress run"
   },
   "dependencies": {
@@ -33,6 +35,8 @@
     "@vitejs/plugin-react": "^5.0.1",
     "autoprefixer": "^10.4.14",
     "cypress": "^15.1.0",
+    "eslint": "^9.36.0",
+    "eslint-plugin-react": "^7.37.5",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "vite": "^5.0.0"

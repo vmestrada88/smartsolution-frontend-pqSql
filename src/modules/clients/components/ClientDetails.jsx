@@ -30,14 +30,14 @@
  * @returns {JSX.Element} The client details page.
  */
 import React, { useEffect, useState } from 'react';
-import { api, extractError } from '../../../services/httpClient';
+import { api, extractError } from '../../../services';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import ButtonDelete from '../../../components/ui/ButtonDelete';
 import toast from 'react-hot-toast';
 
 // const ClientDetails = () => {
-  export default function ClientDetails() {
+export default function ClientDetails() {
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -159,89 +159,89 @@ import toast from 'react-hot-toast';
 
       <section className="bg-white p-4 rounded shadow space-y-4">
         <div>
-        <h3 className="text-xl font-semibold">Basic Info</h3>
-        <input
-          type="text"
-          placeholder="Company Name o House Name"
-          value={companyName}
-          onChange={e => setCompanyName(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="text"
-          placeholder="Adreess"
-          value={address}
-          onChange={e => setAddress(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        <div className="flex gap-2">
+          <h3 className="text-xl font-semibold">Basic Info</h3>
           <input
             type="text"
-            placeholder="City"
-            value={city}
-            onChange={e => setCity(e.target.value)}
-            className="flex-1 p-2 border rounded"
+            placeholder="Company Name o House Name"
+            value={companyName}
+            onChange={e => setCompanyName(e.target.value)}
+            className="w-full p-2 border rounded"
           />
           <input
             type="text"
-            placeholder="State"
-            value={state}
-            onChange={e => setState(e.target.value)}
-            className="w-20 p-2 border rounded"
+            placeholder="Address"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            className="w-full p-2 border rounded"
           />
-          <input
-            type="text"
-            placeholder="ZIP"
-            value={zip}
-            onChange={e => setZip(e.target.value)}
-            className="w-28 p-2 border rounded"
-          />
-        </div>
-
-        <h4 className="text-lg font-semibold mt-4">Contacts</h4>
-        {contacts.map((contact, i) => (
-          <div key={i} className="border p-3 rounded mb-3 space-y-2">
+          <div className="flex gap-2">
             <input
               type="text"
-              placeholder="Name"
-              value={contact.name ?? ''}
-              onChange={e => updateContact(i, 'name', e.target.value)}
-              className="w-full p-2 border rounded"
+              placeholder="City"
+              value={city}
+              onChange={e => setCity(e.target.value)}
+              className="flex-1 p-2 border rounded"
             />
             <input
               type="text"
-              placeholder="Rol"
-              value={contact.role ?? ''}
-              onChange={e => updateContact(i, 'role', e.target.value)}
-              className="w-full p-2 border rounded"
+              placeholder="State"
+              value={state}
+              onChange={e => setState(e.target.value)}
+              className="w-20 p-2 border rounded"
             />
             <input
               type="text"
-              placeholder="Teléfono"
-              value={contact.phone ?? ''}
-              onChange={e => updateContact(i, 'phone', e.target.value)}
-              className="w-full p-2 border rounded"
+              placeholder="ZIP"
+              value={zip}
+              onChange={e => setZip(e.target.value)}
+              className="w-28 p-2 border rounded"
             />
-            <input
-              type="email"
-              placeholder="Email"
-              value={contact.email ?? ''}
-              onChange={e => updateContact(i, 'email', e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-            <ButtonDelete
-              onClick={() => removeContact(i)}
-            >            
-              Delete Contact
-            </ButtonDelete>
           </div>
-        ))}
-        <Button
-          onClick={addContact}
-        >
-          Add Contact
-        </Button>
-</div>
+
+          <h4 className="text-lg font-semibold mt-4">Contacts</h4>
+          {contacts.map((contact, i) => (
+            <div key={i} className="border p-3 rounded mb-3 space-y-2">
+              <input
+                type="text"
+                placeholder="Name"
+                value={contact.name ?? ''}
+                onChange={e => updateContact(i, 'name', e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="text"
+                placeholder="Rol"
+                value={contact.role ?? ''}
+                onChange={e => updateContact(i, 'role', e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="text"
+                placeholder="Teléfono"
+                value={contact.phone ?? ''}
+                onChange={e => updateContact(i, 'phone', e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={contact.email ?? ''}
+                onChange={e => updateContact(i, 'email', e.target.value)}
+                className="w-full p-2 border rounded"
+              />
+              <ButtonDelete
+                onClick={() => removeContact(i)}
+              >
+                Delete Contact
+              </ButtonDelete>
+            </div>
+          ))}
+          <Button
+            onClick={addContact}
+          >
+            Add Contact
+          </Button>
+        </div>
         <Button onClick={handleSaveBasicInfo}  >
           Save
         </Button>
@@ -303,37 +303,37 @@ import toast from 'react-hot-toast';
 
       <ButtonDelete
         onClick={async () => {
-            toast(
-              (t) => (
+          toast(
+            (t) => (
               <div>
                 <p>Are you sure you want to delete this client?</p>
                 <div className="mt-2 flex gap-2">
-                <Button
-                  onClick={async () => {
-                  try {
-                    await api.delete(`/clients/${id}`);
-                    toast.dismiss(t.id);
-                    toast.success('Client deleted');
-                    navigate(-1);
-                  } catch (error) {
-                    toast.dismiss(t.id);
-                    toast.error('Error deleting client');
-                    console.error(error);
-                  }
-                  }}
-                >
-                  Yes, Delete
-                </Button>
-                <ButtonDelete
-                  onClick={() => toast.dismiss(t.id)}
-                >
-                  Cancel
-                </ButtonDelete>
+                  <Button
+                    onClick={async () => {
+                      try {
+                        await api.delete(`/clients/${id}`);
+                        toast.dismiss(t.id);
+                        toast.success('Client deleted');
+                        navigate(-1);
+                      } catch (error) {
+                        toast.dismiss(t.id);
+                        toast.error('Error deleting client');
+                        console.error(error);
+                      }
+                    }}
+                  >
+                    Yes, Delete
+                  </Button>
+                  <ButtonDelete
+                    onClick={() => toast.dismiss(t.id)}
+                  >
+                    Cancel
+                  </ButtonDelete>
                 </div>
               </div>
-              ),
-              { duration: 10000 }
-            );
+            ),
+            { duration: 10000 }
+          );
         }}
       >
         Delete Client

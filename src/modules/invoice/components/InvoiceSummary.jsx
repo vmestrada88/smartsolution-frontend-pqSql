@@ -72,23 +72,23 @@ export default function InvoiceSummary({
           })}
         </tbody>
         <tfoot>
-                  <tr className="bg-gray-200 font-bold">
-                    <td className="border px-4 py-2 text-right">Totals:</td>
-                    <td className="border px-4 py-2 text-center">
-                      {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
-                    </td>
-                    <td className="border px-4 py-2 text-right">
-                      ${selectedItems.reduce((sum, item) => sum + item.priceSell, 0).toFixed(2)}
-                    </td>
-                    <td className="border px-4 py-2 text-right">
-                      ${selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0).toFixed(2)}
-                    </td>
-                    <td className="border px-4 py-2 text-right">
-                      ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
-                    </td>
-                    <td className="border px-4 py-2"></td>
-                  </tr>
-                </tfoot>
+          <tr className="bg-gray-200 font-bold">
+            <td className="border px-4 py-2 text-right">Totals:</td>
+            <td className="border px-4 py-2 text-center">
+              {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
+            </td>
+            <td className="border px-4 py-2 text-right">
+              ${selectedItems.reduce((sum, item) => sum + item.priceSell, 0).toFixed(2)}
+            </td>
+            <td className="border px-4 py-2 text-right">
+              ${selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0).toFixed(2)}
+            </td>
+            <td className="border px-4 py-2 text-right">
+              ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
+            </td>
+            <td className="border px-4 py-2"></td>
+          </tr>
+        </tfoot>
       </table>
 
       {/* EXTRA COSTS */}

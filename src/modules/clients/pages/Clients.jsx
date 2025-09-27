@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { api, extractError } from '../../../services/httpClient';
+import { api, extractError } from '../../../services';
 import CreateClientForm from '../components/CreateClientForm';
 import ClientList from '../components/ClientList';
 import Button from '../../../components/ui/Button';

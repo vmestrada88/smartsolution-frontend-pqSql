@@ -33,7 +33,7 @@ export const apiCall = async (endpoint, options = {}) => {
   if (!response.ok) {
     // Try to parse JSON error if available
     let detail;
-    try { detail = await response.json(); } catch (_) {}
+    try { detail = await response.json(); } catch (_) { /* intentionally empty */ }
     throw new Error(detail?.error || `API Error: ${response.status}`);
   }
   return await response.json();

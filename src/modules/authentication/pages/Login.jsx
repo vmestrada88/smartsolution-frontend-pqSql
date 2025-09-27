@@ -23,7 +23,7 @@
  * - LoginForm: Receives email, password, setters, handleLogin, and navigate as props.
  */
 import React, { useState } from 'react';
-import { api, extractError } from '../../../services/httpClient';
+import { api, extractError } from '../../../services';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 import toast from 'react-hot-toast';
@@ -36,17 +36,17 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-     try {
-       const response = await api.post('/login', { email, password });
+    try {
+      const response = await api.post('/login', { email, password });
 
-       localStorage.setItem('token', response.data.token);
-       localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
 
-        toast.success('Login successful!');
-navigate('/');
-      
+      toast.success('Login successful!');
+      navigate('/');
+
     } catch (err) {
-      console.error('Error complet:', err);
+      console.error('Error:', err);
       toast.error('Login failed: ' + extractError(err));
     }
   };

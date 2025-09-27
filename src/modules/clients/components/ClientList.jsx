@@ -1,7 +1,7 @@
 //smartsolution-frontend\src\shared\components\ClientList.jsx
 
 import React, { useEffect, useState } from 'react';
-import { api } from '../../../services/httpClient';
+import { api } from '../../../services';
 import { useNavigate } from 'react-router-dom';
 import { ShieldUser } from 'lucide-react';
 
@@ -13,9 +13,9 @@ const ClientList = () => {
     const fetchClients = async () => {
       try {
         const res = await api.get('/clients');
-  const data = Array.isArray(res.data) ? res.data : [];
-  const normalized = data.map(c => ({ ...c, _id: c._id ?? c.id }));
-  setClients(normalized);
+        const data = Array.isArray(res.data) ? res.data : [];
+        const normalized = data.map(c => ({ ...c, _id: c._id ?? c.id }));
+        setClients(normalized);
       } catch (error) {
         console.error('Error fetching clients:', error);
       }
@@ -33,19 +33,20 @@ const ClientList = () => {
           {clients.map(client => {
             const cid = String(client._id || client.id);
             return (
-            <li
-              key={cid}
-              className="p-4 hover:bg-teal-100 cursor-pointer flex items-start gap-3"
-              onClick={() => navigate(`/clients/${cid}`)}
-            >
-              <ShieldUser className="text-teal-600 mt-1" size={24} />
-              <div>
-                <h3 className="text-xl font-semibold">{client.companyName || 'No Name'}</h3>
-                <p>{client.address}, {client.city}, {client.state} {client.zip}</p>
-                <p>Contacts: {client.contacts?.length ?? 0}</p>
-              </div>
-            </li>
-          );})}
+              <li
+                key={cid}
+                className="p-4 hover:bg-teal-100 cursor-pointer flex items-start gap-3"
+                onClick={() => navigate(`/clients/${cid}`)}
+              >
+                <ShieldUser className="text-teal-600 mt-1" size={24} />
+                <div>
+                  <h3 className="text-xl font-semibold">{client.companyName || 'No Name'}</h3>
+                  <p>{client.address}, {client.city}, {client.state} {client.zip}</p>
+                  <p>Contacts: {client.contacts?.length ?? 0}</p>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
