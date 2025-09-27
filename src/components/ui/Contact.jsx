@@ -4,7 +4,7 @@
  * @description Renders the contact section with phone and email details for Smart Solution for Living.
  * @returns {JSX.Element} Contact section element.
  */
-import React from "react";
+import React from 'react';
 import { Mail, Phone } from 'lucide-react';
 
 const Contact = () => {

@@ -16,20 +16,20 @@ function Products() {
 
   // useEffect hook to load products when the component mounts
   useEffect(() => {
-      // Define an async function to load products
-      const loadProducts = async () => {
-        // Fetch products from the backend service
-        const data = await fetchProducts();
-        // Normalize the data: ensure it's an array and map to add _id if missing
-        const normalized = Array.isArray(data)
-          ? data.map(p => ({ ...p, _id: p.id ?? p.id }))
-          : [];
-        // Set the normalized products in state
-        setProducts(normalized);
-      };
-      // Call the loadProducts function
-      loadProducts();
-    }, []);
+    // Define an async function to load products
+    const loadProducts = async () => {
+      // Fetch products from the backend service
+      const data = await fetchProducts();
+      // Normalize the data: ensure it's an array and map to add _id if Missing
+      const normalized = Array.isArray(data)
+        ? data.map(p => ({ ...p, _id: p.id ?? p.id }))
+        : [];
+      // Set the normalized products in state
+      setProducts(normalized);
+    };
+    // Call the loadProducts function
+    loadProducts();
+  }, []);
   
   const [products, setProducts] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -82,26 +82,26 @@ function Products() {
 
     toast(
       (t) => (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <span>Do you want to save this proposal to your device?</span>
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-          <button
-          className="toast-button primary"
-          onClick={() => {
-            generateProposalPDF(selectedItems, totalLineCost, logo, getLaborCost);
-            toast.dismiss(t.id);
-          }}
-          >
-          Yes
-          </button>
-          <button
-          className="toast-button dismiss"
-          onClick={() => toast.dismiss(t.id)}
-          >
-          No
-          </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <span>Do you want to save this proposal to your device?</span>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+            <button
+              className="toast-button primary"
+              onClick={() => {
+                generateProposalPDF(selectedItems, totalLineCost, logo,     getLaborCost);
+                toast.dismiss(t.id);
+              }}
+            >
+              Yes
+            </button>
+            <button
+              className="toast-button dismiss"
+              onClick={() => toast.dismiss(t.id)}
+            >
+            No
+            </button>
+          </div>
         </div>
-      </div>
       ),
       { duration: 6000 }
     );
@@ -141,8 +141,6 @@ function Products() {
     </div>
   );
 }
-
-
 
 export default Products;
 
