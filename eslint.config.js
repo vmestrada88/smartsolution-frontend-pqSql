@@ -26,10 +26,11 @@ export default [
     },
     rules: {
       'indent': ['error', 2],
-      'linebreak-style': ['error', 'windows'],  // Changed to 'windows' to allow CRLF
+      'linebreak-style': ['error', 'windows'],
       'quotes': ['error', 'single'],
       'semi': ['error', 'always'],
-      'no-unused-vars': 'off'  // Temporarily disable to avoid false positives with JSX
-    }
+      'no-unused-vars': 'off'
+    },
+    ignores: ['node_modules/**', 'assets/**', './dist/**']  // Added assets
   }
 ];
