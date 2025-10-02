@@ -1,5 +1,16 @@
-// src/components/ExtraCostForm.jsx
-import React, { useState } from 'react';
+/**
+ * ExtraCostForm component allows users to add an extra cost item with a description and amount.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Function} props.onAdd - Callback function called when a new extra cost is added. Receives an object with `name` (string) and `cost` (number).
+ *
+ * @example
+ * <ExtraCostForm onAdd={(extra) => console.log(extra)} />
+ *
+ * @returns {JSX.Element} The rendered form for adding extra costs.
+ */
+import  { useState } from 'react';
 import Button from '../../../components/ui/Button';
 
 export default function ExtraCostForm({ onAdd }) {

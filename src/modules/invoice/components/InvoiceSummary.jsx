@@ -1,5 +1,35 @@
-import React from 'react';
 
+/**
+ * InvoiceSummary component displays a summary of the invoice including selected products,
+ * extra costs, discounts, subtotal, tax, total, and notes. It allows updating quantities,
+ * removing items, extra costs, and discounts.
+ *
+ * @component
+ * @param {Object[]} selectedItems - Array of selected product items for the invoice.
+ * @param {string} selectedItems[].name - Name of the product.
+ * @param {string} selectedItems[].category - Category of the product (used for labor cost).
+ * @param {number} selectedItems[].quantity - Quantity of the product.
+ * @param {number} selectedItems[].priceSell - Unit price of the product.
+ * @param {string|number} selectedItems[].\_id - Unique identifier for the product.
+ * @param {Object[]} [extraCosts=[]] - Array of additional charges to be added to the invoice.
+ * @param {string} extraCosts[].name - Name/description of the extra cost.
+ * @param {number} extraCosts[].cost - Amount of the extra cost.
+ * @param {Object[]} [discount=[]] - Array of discounts to be subtracted from the invoice.
+ * @param {string} discount[].name - Name/description of the discount.
+ * @param {number} discount[].dCost - Amount of the discount.
+ * @param {number} subtotal - The subtotal amount before tax and discounts.
+ * @param {number} tax - The tax amount applied to the subtotal.
+ * @param {number} total - The final total amount after all calculations.
+ * @param {function} removeFromInvoice - Function to remove a product from the invoice. Receives product ID.
+ * @param {function} updateQuantity - Function to update the quantity of a product. Receives product ID and new quantity.
+ * @param {function} removeExtraCost - Function to remove an extra cost. Receives the index of the extra cost.
+ * @param {function} removeDiscount - Function to remove a discount. Receives the index of the discount.
+ * @param {function} getLaborCost - Function to get the labor cost for a given product category.
+ * @param {React.Ref} invoiceRef - Ref to the invoice summary container (for printing or other DOM access).
+ * @param {string} notes - Optional notes to be displayed at the end of the invoice.
+ *
+ * @returns {JSX.Element} The rendered invoice summary component.
+ */
 export default function InvoiceSummary({
   selectedItems,
   extraCosts = [],

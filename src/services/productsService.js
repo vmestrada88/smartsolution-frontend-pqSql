@@ -1,13 +1,44 @@
+/**
+ * Product service module for handling product-related API operations.
+ * 
+ * @module services/productsService
+ * @description Provides methods for fetching, creating, updating, and deleting products.
+ */
 import { API_CONFIG, fetchConfig } from './api';
 
 const BASE = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}`;
 
+/**
+ * Fetches all products from the API.
+ * 
+ * @async
+ * @function fetchProducts
+ * @returns {Promise<Array>} Promise resolving to an array of product objects.
+ * @throws {Error} If there's an error fetching products.
+ */
 export const fetchProducts = async () => {
   const res = await fetch(BASE, { ...fetchConfig });
   if (!res.ok) throw new Error('Error fetching products');
   return res.json();
 };
 
+/**
+ * Creates a new product.
+ * 
+ * @async
+ * @function createProduct
+ * @param {Object} productData - Product data object.
+ * @param {string} productData.name - Product name.
+ * @param {string} productData.brand - Product brand.
+ * @param {string} productData.model - Product model.
+ * @param {string} [productData.description] - Product description.
+ * @param {number} productData.priceBuy - Purchase price.
+ * @param {number} productData.priceSell - Selling price.
+ * @param {number} productData.quantity - Available quantity.
+ * @param {string} productData.category - Product category.
+ * @returns {Promise<Object>} Promise resolving to the created product object.
+ * @throws {Error} If there's an error creating the product.
+ */
 export const createProduct = async (productData) => {
   const res = await fetch(BASE, {
     method: 'POST',

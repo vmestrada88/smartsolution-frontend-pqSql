@@ -1,4 +1,14 @@
-import React, { useEffect, useState } from 'react';
+/* ClientSelect component for selecting a client from a dropdown list.
+ *
+ * Fetches clients from the API and displays them in a select input.
+ * When a client is selected, calls the onSelectClient callback with the selected client object.
+ *
+ * @component
+ * @param {Object} props
+ * @param {function} props.onSelectClient - Callback function called with the selected client object.
+ * @returns {JSX.Element} The rendered client select dropdown.
+ */
+import { useEffect, useState } from 'react';
 import { api } from '../../../services';
 
 const ClientSelect = ({ onSelectClient }) => {

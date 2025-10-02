@@ -29,8 +29,8 @@
  * @component
  * @returns {JSX.Element} The client details page.
  */
-import React, { useEffect, useState } from 'react';
-import { api, extractError } from '../../../services';
+import { useEffect, useState } from 'react';
+import { api} from '../../../services';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import ButtonDelete from '../../../components/ui/ButtonDelete';

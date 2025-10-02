@@ -8,6 +8,15 @@ export default [
   },
   {
     files: ['**/*.{js,jsx}'],
+    plugins: {
+      react
+    },
+    rules: {
+      ...react.configs.recommended.rules,
+    }
+  },
+  {
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',
@@ -39,12 +48,20 @@ export default [
     plugins: {
       react
     },
+    settings: {
+      react: {
+        version: 'detect'
+      }
+    },
     rules: {
       'indent': ['error', 2],
       'linebreak-style': ['error', 'windows'],
       'quotes': ['error', 'single'],
       'semi': ['error', 'always'],
-      'no-unused-vars': 'off'
+      'no-unused-vars': 'warn',
+      'react/jsx-uses-react': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off'
     }
   }
 ];

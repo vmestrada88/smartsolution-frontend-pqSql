@@ -1,5 +1,5 @@
-import React from 'react';
 import getLaborCost from '../../../util/LaborCost';
+import PropTypes from 'prop-types';
 
 /**
  * InvoiceTable component displays the floating table of selected items for the invoice.
@@ -122,6 +122,15 @@ const InvoiceTable = ({
       </div>
     </>
   );
+  
+};
+
+InvoiceTable.propTypes = {
+  selectedItems: PropTypes.arrayOf(PropTypes.object).isRequired,
+  updateQuantity: PropTypes.func.isRequired,
+  removeFromInvoice: PropTypes.func.isRequired,
+  exportProductsPDF: PropTypes.func.isRequired,
+  setShowProposalForm: PropTypes.func.isRequired
 };
 
 export default InvoiceTable;

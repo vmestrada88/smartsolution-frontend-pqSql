@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchProducts } from '../../../services';
 import '../../../index.css';
 import { ProductList, ProductHeader, InvoiceTable, ProposalFormModal } from '../components';

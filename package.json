@@ -1,8 +1,8 @@
 {
-  "name": "smart-solution-starter",
+  "name": "smart-solution-frontend",
   "version": "0.0.1",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "author": "Victor Estrada",
   "engines": {
     "node": ">=20.0.0"
@@ -18,12 +18,14 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "html2canvas": "^1.4.1",
     "i18next": "^25.3.2",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^3.8.2",
     "lucide-react": "^0.525.0",
+    "prop-types": "^15.8.1",
     "react": "18",
     "react-dom": "18",
     "react-hot-toast": "^2.6.0",

@@ -8,7 +8,6 @@
  * @param {string[]} props.allowedRoles - Array of roles permitted to access the route.
  * @returns {React.ReactNode} - Renders children if user is authenticated and has an allowed role, otherwise redirects.
  */
-import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {

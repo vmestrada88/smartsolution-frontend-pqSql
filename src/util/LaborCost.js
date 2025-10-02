@@ -1,4 +1,11 @@
-// LaborCost.js
+/**
+ * Labor cost calculation utility.
+ * 
+ * @module util/LaborCost
+ * @description Calculates labor cost based on product category.
+ * @param {string} category - The product category (e.g., 'IP Camera', 'NVR', etc.)
+ * @returns {number} The labor cost in USD for the specified category.
+ */
 export default function getLaborCost(category) {
   switch (category) {
   case 'IP Camera':
