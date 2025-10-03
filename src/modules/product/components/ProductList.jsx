@@ -5,8 +5,8 @@
  * @description Displays products in a list format with name, description, pricing details,
  *              and an "Add to Invoice" button for each product.
  * @param {Object} props - Component props
- * @param {Array} props.products - Array of product objects to display
- * @param {Function} props.addToInvoice - Callback function when a product is added to invoice
+ * @param {Array} [props.products=[]] - Array of product objects to display
+ * @param {Function} [props.addToInvoice=()=>{}] - Callback function when a product is added to invoice
  * @returns {JSX.Element} The product list component
  */
 import getLaborCost from '../../../util/LaborCost';
@@ -14,7 +14,7 @@ import Button from '../../../components/ui/Button';
 import logo from '../../../assets/logo.jpg';
 import PropTypes from 'prop-types';
 
-export default function ProductList({ products, addToInvoice }) {
+export default function ProductList({ products = [], addToInvoice = () => {} }) {
 
   return (
     <div className="mb-6">
@@ -67,10 +67,6 @@ export default function ProductList({ products, addToInvoice }) {
 }
 
 ProductList.propTypes = {
-  products: PropTypes.arrayOf(PropTypes.object).isRequired,
-  addToInvoice: PropTypes.func.isRequired
-};
-ProductList.defaultProps = {
-  products: [],
-  addToInvoice: () => {}
+  products: PropTypes.arrayOf(PropTypes.object),
+  addToInvoice: PropTypes.func
 };

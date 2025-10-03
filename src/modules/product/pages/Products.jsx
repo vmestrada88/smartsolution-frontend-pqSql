@@ -18,14 +18,20 @@ function Products() {
   useEffect(() => {
     // Define an async function to load products
     const loadProducts = async () => {
-      // Fetch products from the backend service
-      const data = await fetchProducts();
-      // Normalize the data: ensure it's an array and map to add _id if Missing
-      const normalized = Array.isArray(data)
-        ? data.map(p => ({ ...p, _id: p.id ?? p.id }))
-        : [];
-      // Set the normalized products in state
-      setProducts(normalized);
+      try {
+        // Fetch products from the backend service
+        const data = await fetchProducts();
+        // Normalize the data: ensure it's an array and map to add _id if Missing
+        const normalized = Array.isArray(data)
+          ? data.map(p => ({ ...p, _id: p.id ?? p.id }))
+          : [];
+        // Set the normalized products in state
+        setProducts(normalized);
+      } catch (error) {
+        console.error('Error loading products:', error);
+        // Set empty array on error to prevent crashes
+        setProducts([]);
+      }
     };
     // Call the loadProducts function
     loadProducts();
