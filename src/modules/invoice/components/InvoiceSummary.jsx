@@ -1,4 +1,3 @@
-
 /**
  * InvoiceSummary component displays a summary of the invoice including selected products,
  * extra costs, discounts, subtotal, tax, total, and notes. It allows updating quantities,
@@ -30,6 +29,8 @@
  *
  * @returns {JSX.Element} The rendered invoice summary component.
  */
+import { fetchProducts } from '../../../services/productsService';
+
 export default function InvoiceSummary({
   selectedItems,
   extraCosts = [],

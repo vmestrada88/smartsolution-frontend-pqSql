@@ -17,9 +17,26 @@ const BASE = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}`;
  * @throws {Error} If there's an error fetching products.
  */
 export const fetchProducts = async () => {
-  const res = await fetch(BASE, { ...fetchConfig });
-  if (!res.ok) throw new Error('Error fetching products');
-  return res.json();
+  // console.log('🔍 Full URL:', BASE);
+  
+  try {
+    const res = await fetch(BASE, { ...fetchConfig });
+    // console.log('🔍 Response status:', res.status);
+    // console.log('🔍 Response headers:', res.headers.get('content-type'));
+    
+    if (!res.ok) {
+      const errorText = await res.text();
+      // console.error('❌ Error response:', errorText);
+      throw new Error(`HTTP ${res.status}: ${errorText}`);
+    }
+    
+    const data = await res.json();
+    // console.log('✅ Products loaded:', data);
+    return data;
+  } catch (error) {
+    // console.error('❌ Fetch error:', error);
+    throw error;
+  }
 };
 
 /**
