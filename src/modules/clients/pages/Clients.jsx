@@ -24,7 +24,6 @@ const Clients = () => {
   const fetchClients = async () => {
     try {
       const res = await api.get('/clients');
-      console.log('Clients fetched:', res.data); 
     } catch (err) {
       console.error('Error loading clients:', err);
     }
