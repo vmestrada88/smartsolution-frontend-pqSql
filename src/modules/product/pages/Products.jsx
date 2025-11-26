@@ -74,10 +74,32 @@ function Products() {
   };
 
   const removeFromInvoice = (id) => {
-    const confirmDelete = window.confirm('¿Desea eliminar este producto?');
-    if (confirmDelete) {
-      setSelectedItems(selectedItems.filter(item => item._id !== id));
-    }
+    toast(
+      (t) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <span>Do you want to remove this product?</span>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+            <button
+              className="toast-button primary"
+              onClick={() => {
+                setSelectedItems(selectedItems.filter(item => item._id !== id));
+                toast.dismiss(t.id);
+                toast.success('Product removed');
+              }}
+            >
+              Yes
+            </button>
+            <button
+              className="toast-button dismiss"
+              onClick={() => toast.dismiss(t.id)}
+            >
+            No
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 6000 }
+    );
   };
 
   const exportProductsPDF = () => {
