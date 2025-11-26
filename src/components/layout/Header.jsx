@@ -55,7 +55,16 @@ const Header = () => {
         isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 sm:max-h-full sm:opacity-100'
       } overflow-hidden sm:overflow-visible`}>
         <Link to="/" onClick={closeMenu} className="hover:text-gray-200 border-b border-white pb-1 sm:pb-2 w-full sm:w-auto text-center sm:text-left">Home</Link>
+
+        {user && (
+          <Link to={`/dash/${role}`} onClick={closeMenu} className="hover:text-gray-200 border-b border-white pb-1 sm:pb-2 w-full sm:w-auto text-center sm:text-left">
+            Dash {role.charAt(0).toUpperCase() + role.slice(1)}
+          </Link>
+        )}
+
         <Link to="/products" onClick={closeMenu} className="hover:text-gray-200 border-b border-white pb-1 sm:pb-2 w-full sm:w-auto text-center sm:text-left">Products</Link>
+
+
 
         {role === 'admin' && (
           <>

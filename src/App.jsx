@@ -20,9 +20,9 @@ import ClientDetails from './modules/clients/components/ClientDetails';
 
 import { InvoicePage } from './modules/invoice/pages/InvoicePage';
 import Login from './modules/authentication/pages/Login';
-// import Profile from './modules/authentication/pages/Profile';
-// import Unauthorized from './modules/authentication/pages/Unauthorized';
-
+import DashboardAdmin from './modules/dash/admin/DashboardAdmin';
+import DashboardTechnician from './modules/dash/technician/DashboardTechnician';
+import DashboardClient from './modules/dash/client/DashboardClient';
 
 import ProtectedRoute from './modules/authentication/components/ProtectedRoute';
 
@@ -37,7 +37,32 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
             <Route path="/login" element={<Login />} />
-            {/* <Route path="/unauthorized" element={<Unauthorized />} /> */}
+
+            {/* DASHBOARDS */}
+            <Route
+              path="/dash/admin"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <DashboardAdmin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dash/technician"
+              element={
+                <ProtectedRoute allowedRoles={['technician']}>
+                  <DashboardTechnician />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dash/client"
+              element={
+                <ProtectedRoute allowedRoles={['client']}>
+                  <DashboardClient />
+                </ProtectedRoute>
+              }
+            />
 
             {/* ADMIN */}
             <Route
@@ -65,7 +90,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-           
 
             {/* CLIENT */}
             {/* <Route

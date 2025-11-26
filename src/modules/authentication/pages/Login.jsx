@@ -42,8 +42,18 @@ function Login() {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
 
+      const user = response.data.user;
       toast.success('Login successful!');
-      navigate('/');
+      
+      if (user.role === 'admin') {
+        navigate('/dash/admin');
+      } else if (user.role === 'technician') {
+        navigate('/dash/technician');
+      } else if (user.role === 'client') {
+        navigate('/dash/client');
+      } else {
+        navigate('/');
+      }
 
     } catch (err) {
       console.error('Error:', err);
