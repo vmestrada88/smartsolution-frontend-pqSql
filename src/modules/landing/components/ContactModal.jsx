@@ -28,8 +28,8 @@ export default function ContactModal({ isOpen, onClose }) {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Mail className="text-teal-500" />
-            <a href="mailto:sales@smartsolutionfl.com" className="text-lg text-gray-800 hover:text-teal-600 transition">
-              sales@smartsolutionfl.com
+            <a href="mailto:info@smartsolutionfl.com" className="text-lg text-gray-800 hover:text-teal-600 transition">
+              info@smartsolutionfl.com
             </a>
           </div>
         </div>
