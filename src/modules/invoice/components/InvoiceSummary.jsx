@@ -45,6 +45,7 @@ export default function InvoiceSummary({
   getLaborCost,
   invoiceRef,
   notes,
+  taxExempt = false,
 }) {
   return (
     <div ref={invoiceRef} className="bg-white p-6 rounded shadow w-full max-w-[800px] mx-auto">
@@ -109,10 +110,10 @@ export default function InvoiceSummary({
               {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
             </td>
             <td className="border px-4 py-2 text-right">
-              ${selectedItems.reduce((sum, item) => sum + item.priceSell, 0).toFixed(2)}
+              ${selectedItems.reduce((sum, item) => sum + (item.priceSell * item.quantity), 0).toFixed(2)}
             </td>
             <td className="border px-4 py-2 text-right">
-              ${selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0).toFixed(2)}
+              ${selectedItems.reduce((sum, item) => sum + (getLaborCost(item.category) * item.quantity), 0).toFixed(2)}
             </td>
             <td className="border px-4 py-2 text-right">
               ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
@@ -174,7 +175,13 @@ export default function InvoiceSummary({
           Subtotal: <span className="font-semibold">${subtotal.toFixed(2)}</span>
         </p>
         <p>
-          Tax (7%): <span className="font-semibold">${tax.toFixed(2)}</span>
+          Tax (7%): <span className="font-semibold">
+            {taxExempt ? (
+              <span className="text-green-600">$0.00 (Tax Exempt)</span>
+            ) : (
+              `$${tax.toFixed(2)}`
+            )}
+          </span>
         </p>
         <p className="text-xl font-bold">Total: ${total.toFixed(2)}</p>
       </div>
