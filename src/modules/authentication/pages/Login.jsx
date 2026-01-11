@@ -23,7 +23,9 @@
  * - LoginForm: Receives email, password, setters, handleLogin, and navigate as props.
  */
 import { useState } from 'react';
-import { api, extractError } from '../../../services';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../../store/authSlice';
+import { extractError } from '../../../services';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 import toast from 'react-hot-toast';
@@ -33,18 +35,17 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await api.post('/login', { email, password });
-
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-
-      const user = response.data.user;
+      const result = await dispatch(login({ email, password })).unwrap();
       toast.success('Login successful!');
-      
+
+      const user = result.user;
       if (user.role === 'admin') {
         navigate('/dash/admin');
       } else if (user.role === 'technician') {
@@ -54,10 +55,9 @@ function Login() {
       } else {
         navigate('/');
       }
-
     } catch (err) {
-      console.error('Error:', err);
-      toast.error('Login failed: ' + extractError(err));
+      console.error('Login error:', err);
+      toast.error('Login failed: ' + (err || extractError(err)));
     }
   };
 

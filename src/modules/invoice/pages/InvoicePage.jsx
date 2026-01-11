@@ -50,6 +50,7 @@ export const InvoicePage = () => {
   const [discount, setDiscount] = useState([]);
   const [documentType, setDocumentType] = useState('invoice'); // "invoice" or "proposal"
   const [notes, setNotes] = useState(''); // Notes for the invoice
+  const [taxExempt, setTaxExempt] = useState(false); // Tax exemption flag
   const invoiceRef = useRef();
   const [selectedClient, setSelectedClient] = useState(null);
   useEffect(() => {
@@ -102,7 +103,7 @@ export const InvoicePage = () => {
   const totalExtras = extraCosts.reduce((acc, cur) => acc + cur.cost, 0);
   const totalDiscount = discount.reduce((acc, cur) => acc + cur.dCost, 0);
   const subtotal = subtotalProducts + totalLabor + totalExtras - totalDiscount;
-  const tax = subtotal * TAX_RATE;
+  const tax = taxExempt ? 0 : subtotal * TAX_RATE;
   const total = subtotal + tax;
 
   const exportPDF = () => {
@@ -119,6 +120,7 @@ export const InvoicePage = () => {
       discount,
       documentType,
       notes,
+      taxExempt,
     });
 
     generatePDF();
@@ -161,6 +163,19 @@ export const InvoicePage = () => {
             className="mr-1"
           />
           Proposal
+        </label>
+      </div>
+
+      <div className="mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50">
+        <label className="flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={taxExempt}
+            onChange={(e) => setTaxExempt(e.target.checked)}
+            className="mr-2 h-4 w-4"
+          />
+          <span className="font-semibold">Tax Exempt</span>
+          <span className="ml-2 text-sm text-gray-600">(No taxes will be applied to this invoice)</span>
         </label>
       </div>
 
@@ -230,6 +245,7 @@ export const InvoicePage = () => {
         clientName={selectedClient ? (selectedClient.companyName || selectedClient.name) : 'Not selected'}
         documentType={documentType}
         notes={notes}
+        taxExempt={taxExempt}
       />
 
       <DownloadPDFButton onClick={exportPDF} />

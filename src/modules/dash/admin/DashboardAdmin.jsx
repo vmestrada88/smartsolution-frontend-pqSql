@@ -1,12 +1,18 @@
 import { Link } from 'react-router-dom';
+import { Users, Box, FileText } from 'lucide-react';
 
 /**
  * DashboardAdmin component displays the admin dashboard with access to key sections.
  * 
  * @returns {JSX.Element} Renders the admin dashboard with navigation links.
  */
+import { useSelector } from 'react-redux';
+// ClientsPanel and ProductsPanel removed: admin dashboard uses cards and calendar
+import TasksPanel from '../../tasks/components/TasksPanel';
+import TasksCalendar from '../../tasks/components/TasksCalendar';
+
 const DashboardAdmin = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = useSelector((state) => state.auth.user) || JSON.parse(localStorage.getItem('user'));
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -19,7 +25,12 @@ const DashboardAdmin = () => {
             to="/clients"
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
           >
-            <h2 className="text-xl font-semibold text-blue-600 mb-2">Clients</h2>
+            <div className="flex items-center mb-3">
+              <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-3">
+                <Users className="w-5 h-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-blue-600">Clients</h2>
+            </div>
             <p className="text-gray-600">Manage and view client information.</p>
           </Link>
           
@@ -27,7 +38,12 @@ const DashboardAdmin = () => {
             to="/products"
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
           >
-            <h2 className="text-xl font-semibold text-green-600 mb-2">Products</h2>
+            <div className="flex items-center mb-3">
+              <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center mr-3">
+                <Box className="w-5 h-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-green-600">Products</h2>
+            </div>
             <p className="text-gray-600">Browse and manage products.</p>
           </Link>
           
@@ -35,9 +51,23 @@ const DashboardAdmin = () => {
             to="/invoice"
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
           >
-            <h2 className="text-xl font-semibold text-purple-600 mb-2">Invoices</h2>
+            <div className="flex items-center mb-3">
+              <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mr-3">
+                <FileText className="w-5 h-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-purple-600">Invoices</h2>
+            </div>
             <p className="text-gray-600">Create and manage invoices.</p>
           </Link>
+        </div>
+      
+        {/* Clients and Products panels removed — top cards provide navigation */}
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <TasksPanel />
+          <div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-3">Calendar</h2>
+            <TasksCalendar role="admin" />
+          </div>
         </div>
       </div>
     </div>

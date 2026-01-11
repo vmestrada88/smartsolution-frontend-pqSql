@@ -17,6 +17,7 @@ const BasicInvoicePDF = ({
   discount = [],
   documentType = 'invoice', // "invoice" or "proposal"
   notes = '', // Add notes parameter
+  taxExempt = false, // Tax exemption flag
 }) => {
   const TAX_RATE = 0.07;
 
@@ -28,7 +29,7 @@ const BasicInvoicePDF = ({
   const totalExtras = extraCosts.reduce((acc, cur) => acc + cur.cost, 0);
   const totalDiscount = discount.reduce((acc, cur) => acc + cur.dCost, 0);
   const subtotal = subtotalProducts + totalLabor + totalExtras - totalDiscount;
-  const tax = subtotal * TAX_RATE;
+  const tax = taxExempt ? 0 : subtotal * TAX_RATE;
   const total = subtotal + tax;
 
 
@@ -113,8 +114,8 @@ const BasicInvoicePDF = ({
 
     // Footer calculations
     const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = selectedItems.reduce((sum, item) => sum + item.priceSell, 0);
-    const totalLaborCost = selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0);
+    const totalPrice = selectedItems.reduce((sum, item) => sum + (item.priceSell * item.quantity), 0);
+    const totalLaborCost = selectedItems.reduce((sum, item) => sum + (getLaborCost(item.category) * item.quantity), 0);
     const totalLineCost = selectedItems.reduce(
       (sum, item) => sum + item.quantity * (item.priceSell + getLaborCost(item.category)),
       0
@@ -178,7 +179,11 @@ const BasicInvoicePDF = ({
     doc.setFont(undefined, 'bold');
     doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 14, y);
     y += 6;
-    doc.text(`Tax (7%): $${tax.toFixed(2)}`, 14, y);
+    if (taxExempt) {
+      doc.text(`Tax (7%): $0.00 (Tax Exempt)`, 14, y);
+    } else {
+      doc.text(`Tax (7%): $${tax.toFixed(2)}`, 14, y);
+    }
     y += 6;
     doc.text(`Total: $${total.toFixed(2)}`, 14, y);
     y += 10;
@@ -200,9 +205,12 @@ const BasicInvoicePDF = ({
 
     // Warranty disclaimer
     const warrantyText =
-      'Warranty Disclaimer: ' +
+    'Important: The full payment for the equipment must be made before the installation work is scheduled. All work will be performed by a qualified professional.' +
+      '\n\n' +    
+    'Warranty Disclaimer: ' +
       'The installed equipment is covered by a limited warranty for a period of one (1) year from the date of installation. ' +
       'Labor is warranted for six (6) months. No warranty is provided for any equipment not supplied directly by our company.';
+      
 
     const splitText = doc.splitTextToSize(warrantyText, 180); // Split text to fit page width
     doc.setFontSize(9);

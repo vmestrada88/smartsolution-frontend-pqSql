@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../../services';
 import { Link } from 'react-router-dom';
+import TasksCalendar from '../../tasks/components/TasksCalendar';
 
 /**
  * DashboardClient component displays the client dashboard with personal client information.
@@ -143,6 +144,10 @@ const DashboardClient = () => {
               </button>
               {accordionOpen.jobs && (
                 <div className="px-6 pb-6">
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold mb-2">Calendar</h3>
+                    <TasksCalendar role="client" clientId={client.id} />
+                  </div>
                   {client.jobs?.length > 0 ? (
                     <ul className="space-y-4">
                       {client.jobs.map((job, i) => (
