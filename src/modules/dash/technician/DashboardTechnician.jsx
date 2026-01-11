@@ -1,4 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import TasksCalendar from '../../tasks/components/TasksCalendar';
+import TasksCard from '../../tasks/components/TasksCard';
+import { fetchUsers as fetchUsersService } from '../../../services/usersService';
 
 /**
  * DashboardTechnician component displays the technician dashboard.
@@ -7,6 +12,20 @@ import { Link } from 'react-router-dom';
  */
 const DashboardTechnician = () => {
   const user = JSON.parse(localStorage.getItem('user'));
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [users, setUsers] = useState([]);
+  const clients = useSelector(state => state.clients.items);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const u = await fetchUsersService();
+        setUsers(u);
+      } catch (err) {
+        console.warn('Failed to fetch users for technician board', err);
+      }
+    })();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -27,14 +46,24 @@ const DashboardTechnician = () => {
             to="/products"
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
           >
-            <h2 className="text-xl font-semibold text-green-600 mb-2">Inventory</h2>
-            <p className="text-gray-600">View and manage yourInventory.</p>
+            <h2 className="text-xl font-semibold text-green-600 mb-2">Truck Inventory</h2>
+            <p className="text-gray-600">View the truck inventory (read-only).</p>
           </Link>
           
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-orange-600 mb-2">Calendar</h2>
-            <p className="text-gray-600">View your assigned jobs and schedule.</p>
-            {/* Aquí puedes agregar un componente de calendario más tarde */}
+            <p className="text-gray-600">View assigned jobs and technicians' schedule.</p>
+            <div className="mt-4">
+              <TasksCalendar role="technician" userId={user?.id} onTaskSelect={(t) => setSelectedTask(t)} />
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-indigo-600 mb-2">Tarea</h2>
+            <p className="text-gray-600">Detalles de la tarea seleccionada.</p>
+            <div className="mt-4">
+              <TasksCard task={selectedTask} users={users} clients={clients} onClose={() => setSelectedTask(null)} onSaved={() => { setSelectedTask(null); }} />
+            </div>
           </div>
         </div>
       </div>

@@ -35,6 +35,23 @@
   border-color: #dc2626;
 }
 
+/* FullCalendar toolbar button colors to match the 'Add' button (Tailwind bg-blue-600) */
+:root {
+  --fc-button-bg-color: #2563eb;
+  --fc-button-border-color: #2563eb;
+  --fc-button-hover-bg-color: #1d4ed8;
+  --fc-button-hover-border-color: #1d4ed8;
+  --fc-button-active-bg-color: #1e40af;
+  --fc-button-active-border-color: #1e40af;
+  --fc-button-text-color: #ffffff;
+}
+
+/* Ensure primary FullCalendar buttons get the same rounded look */
+.fc .fc-button-primary {
+  border-radius: 0.25rem;
+  color: var(--fc-button-text-color);
+}
+
 /* Mobile Menu Styles */
 .mobile-menu-enter {
   max-height: 0;
