@@ -11,7 +11,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Variables de entorno para el build
-ARG VITE_API_URL=https://api.smartsolutionfl.com/api
+ARG VITE_API_URL=/api
 ENV VITE_API_URL=$VITE_API_URL \
     CYPRESS_INSTALL_BINARY=0 \
     DISABLE_AWS_SDK=true \
