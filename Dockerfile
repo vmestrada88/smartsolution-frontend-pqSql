@@ -23,8 +23,8 @@ RUN apk add --no-cache python3 make g++
 # Copiar package files
 COPY package*.json ./
 
-# Instalar dependencias
-RUN npm ci --ignore-scripts
+# Instalar dependencias (incluye devDependencies necesarias para el build)
+RUN npm ci --include=dev --ignore-scripts
 
 # Copiar código fuente
 COPY . .
