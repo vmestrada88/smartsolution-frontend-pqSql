@@ -25,6 +25,8 @@
     "@fullcalendar/react": "^6.1.8",
     "@fullcalendar/timegrid": "^6.1.8",
     "@reduxjs/toolkit": "^1.9.5",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.1",
     "axios": "^1.7.7",
     "eslint-plugin-react-hooks": "^5.2.0",
     "html2canvas": "^1.4.1",

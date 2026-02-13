@@ -35,7 +35,7 @@ const DashboardAdmin = () => {
           </Link>
           
           <Link
-            to="/products"
+            to="/admin/products"
             className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
           >
             <div className="flex items-center mb-3">
@@ -44,7 +44,7 @@ const DashboardAdmin = () => {
               </div>
               <h2 className="text-xl font-semibold text-green-600">Products</h2>
             </div>
-            <p className="text-gray-600">Browse and manage products.</p>
+            <p className="text-gray-600">Manage and edit products inventory.</p>
           </Link>
           
           <Link

@@ -19,12 +19,19 @@ import Clients from './modules/clients/pages/Clients';
 import ClientDetails from './modules/clients/components/ClientDetails';
 
 import { InvoicePage } from './modules/invoice/pages/InvoicePage';
+import InvoiceList from './modules/invoice/pages/InvoiceList';
+import InvoiceDetail from './modules/invoice/pages/InvoiceDetail';
 import Login from './modules/authentication/pages/Login';
 import DashboardAdmin from './modules/dash/admin/DashboardAdmin';
 import DashboardTechnician from './modules/dash/technician/DashboardTechnician';
 import DashboardClient from './modules/dash/client/DashboardClient';
 
 import ProtectedRoute from './modules/authentication/components/ProtectedRoute';
+import Shop from './modules/shop/pages/Shop';
+import Cart from './modules/shop/pages/Cart';
+import Checkout from './modules/shop/pages/Checkout';
+import Orders from './modules/shop/pages/Orders';
+import AdminProducts from './modules/admin/products/pages/AdminProducts';
 
 function App() {
   return (
@@ -36,6 +43,7 @@ function App() {
             {/* Publics Routs */}
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/shop" element={<Shop />} />
             <Route path="/login" element={<Login />} />
 
             {/* DASHBOARDS */}
@@ -66,6 +74,12 @@ function App() {
 
             {/* ADMIN */}
             <Route
+              path="/admin/products"
+              element={
+                <AdminProducts />
+              }
+            />
+            <Route
               path="/clients"
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
@@ -91,6 +105,24 @@ function App() {
               }
             />
 
+            <Route
+              path="/invoices"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <InvoiceList />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/invoices/:id"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <InvoiceDetail />
+                </ProtectedRoute>
+              }
+            />
+
             {/* CLIENT */}
             {/* <Route
               path="/profile"
@@ -100,6 +132,32 @@ function App() {
                 </ProtectedRoute>
               }
             /> */}
+
+            {/* SHOP */}
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'client', 'technician']}>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'client', 'technician']}>
+                  <Checkout />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'client', 'technician']}>
+                  <Orders />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
           <Contact />
         </main>

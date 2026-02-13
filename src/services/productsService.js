@@ -8,6 +8,14 @@ import { API_CONFIG, fetchConfig } from './api';
 
 const BASE = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}`;
 
+const authHeaders = () => {
+  const token = localStorage.getItem('token');
+  return {
+    ...fetchConfig.headers,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
+
 /**
  * Fetches all products from the API.
  * 
@@ -59,7 +67,7 @@ export const fetchProducts = async () => {
 export const createProduct = async (productData) => {
   const res = await fetch(BASE, {
     method: 'POST',
-    ...fetchConfig,
+    headers: authHeaders(),
     body: JSON.stringify(productData)
   });
   if (!res.ok) throw new Error('Error creating product');
@@ -69,7 +77,7 @@ export const createProduct = async (productData) => {
 export const updateProduct = async (id, productData) => {
   const res = await fetch(`${BASE}/${id}`, {
     method: 'PUT',
-    ...fetchConfig,
+    headers: authHeaders(),
     body: JSON.stringify(productData)
   });
   if (!res.ok) throw new Error('Error updating product');
@@ -77,7 +85,10 @@ export const updateProduct = async (id, productData) => {
 };
 
 export const deleteProduct = async (id) => {
-  const res = await fetch(`${BASE}/${id}`, { method: 'DELETE' });
+  const res = await fetch(`${BASE}/${id}`, { 
+    method: 'DELETE',
+    headers: authHeaders()
+  });
   if (!res.ok) throw new Error('Error deleting product');
   return res.json();
 };
