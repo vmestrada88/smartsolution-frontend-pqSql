@@ -8,7 +8,9 @@
     "node": ">=20.0.0"
   },
   "scripts": {
+    "prepare": "husky",
     "dev": "vite --host",
+    "lint": "eslint .",
     "build": "vite build",
     "preview": "vite preview",
     "cypress:open": "cypress open",
@@ -18,12 +20,11 @@
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.8",
-    "@fullcalendar/react": "^6.1.8",
     "@fullcalendar/daygrid": "^6.1.8",
     "@fullcalendar/interaction": "^6.1.8",
+    "@fullcalendar/react": "^6.1.8",
     "@fullcalendar/timegrid": "^6.1.8",
     "@reduxjs/toolkit": "^1.9.5",
-    "react-redux": "^8.1.2",
     "axios": "^1.7.7",
     "eslint-plugin-react-hooks": "^5.2.0",
     "html2canvas": "^1.4.1",
@@ -37,6 +38,7 @@
     "react-dom": "18",
     "react-hot-toast": "^2.6.0",
     "react-i18next": "^15.6.0",
+    "react-redux": "^8.1.2",
     "react-router-dom": "^7.7.0",
     "react-to-print": "^3.1.1"
   },
@@ -46,6 +48,7 @@
     "cypress": "^15.1.0",
     "eslint": "^9.36.0",
     "eslint-plugin-react": "^7.37.5",
+    "husky": "^9.1.7",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "vite": "^7.1.9"
