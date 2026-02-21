@@ -9,6 +9,10 @@ export const fetchCart = createAsyncThunk(
       const cart = await shopService.fetchCart();
       return cart;
     } catch (error) {
+      // If not authenticated (401), return empty cart instead of error
+      if (error.message.includes('401')) {
+        return [];
+      }
       return rejectWithValue(error.message);
     }
   }
@@ -16,11 +20,37 @@ export const fetchCart = createAsyncThunk(
 
 export const addToCartAsync = createAsyncThunk(
   'cart/addToCart',
-  async (product, { rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
-      const cartItem = await shopService.addToCart(product);
+      const token = localStorage.getItem('token');
+      // If payload is object with product, use it for offline mode
+      if (typeof payload === 'object' && payload.product) {
+        const { productId, product } = payload;
+        if (!token) {
+          // User not authenticated - add locally
+          return {
+            id: Date.now(),
+            productId,
+            product,
+            quantity: 1,
+          };
+        }
+        // User authenticated - send to API
+        const cartItem = await shopService.addToCart(productId);
+        return cartItem;
+      }
+      // Legacy support: just productId
+      const cartItem = await shopService.addToCart(payload);
       return cartItem;
     } catch (error) {
+      // If not authenticated (401), add locally with dummy data
+      if (error.message.includes('401')) {
+        return {
+          id: Date.now(),
+          productId: payload.productId || payload,
+          quantity: 1,
+        };
+      }
       return rejectWithValue(error.message);
     }
   }

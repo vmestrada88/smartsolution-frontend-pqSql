@@ -46,7 +46,7 @@ const Checkout = () => {
         items: items.map(item => ({
           productId: item.productId,
           quantity: item.quantity,
-          price: item.product.price
+          price: item.product.priceSell
         }))
       };
 
@@ -61,7 +61,7 @@ const Checkout = () => {
     }
   };
 
-  const totalAmount = items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  const totalAmount = items.reduce((total, item) => total + (item.product.priceSell * item.quantity), 0);
 
   const appearance = {
     theme: 'stripe',
@@ -181,7 +181,7 @@ const Checkout = () => {
                     <p className="font-medium">{item.product.name}</p>
                     <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                   </div>
-                  <p className="font-semibold">${(item.product.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-semibold">${(item.product.priceSell * item.quantity).toFixed(2)}</p>
                 </div>
               ))}
             </div>

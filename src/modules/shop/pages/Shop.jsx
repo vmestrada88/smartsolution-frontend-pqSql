@@ -6,9 +6,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from '../../../services/productsService';
-import { addToCart } from '../../../store/cartSlice';
+import { addToCartAsync } from '../../../store/cartSlice';
+import { fetchCart } from '../../../store/cartSlice';
 import { Search, ShoppingCart, Package } from 'lucide-react';
 import toast from 'react-hot-toast';
+import FloatingCart from '../components/FloatingCart';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -22,7 +24,8 @@ const Shop = () => {
 
   useEffect(() => {
     loadProducts();
-  }, []);
+    dispatch(fetchCart()); // Load cart when component mounts
+  }, [dispatch]);
 
   useEffect(() => {
     filterProducts();
@@ -57,9 +60,13 @@ const Shop = () => {
     setFilteredProducts(filtered);
   };
 
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-    toast.success(`${product.name} added to cart`);
+  const handleAddToCart = async (product) => {
+    try {
+      await dispatch(addToCartAsync({ productId: product.id, product })).unwrap();
+      toast.success(`${product.name} added to cart`);
+    } catch (error) {
+      toast.error('Error adding to cart');
+    }
   };
 
   const categories = ['all', ...new Set(products.map(p => p.category))];
@@ -107,47 +114,37 @@ const Shop = () => {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
         {filteredProducts.map(product => (
-          <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="aspect-square bg-gray-200 flex items-center justify-center">
-              {product.image ? (
+          <div key={product.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow flex">
+            <div className="w-28 h-28 bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+              {product.image_url || (product.imageUrls && product.imageUrls[0]) ? (
                 <img
-                  src={product.image}
+                  src={product.image_url || product.imageUrls?.[0]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  className="w-full h-full object-contain"
                 />
               ) : (
-                <Package className="h-16 w-16 text-gray-400" />
+                <Package className="h-8 w-8 text-gray-400" />
               )}
             </div>
-            <div className="p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
+            <div className="p-3 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 mb-1">
                   {product.name}
                 </h3>
-                <span className="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded-full">
-                  {product.category}
-                </span>
-              </div>
-              <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                {product.description}
-              </p>
-              <div className="flex justify-between items-center">
-                <span className="text-2xl font-bold text-teal-600">
-                  ${product.price}
-                </span>
-                <span className={`text-sm ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-                </span>
+                <p className="text-teal-600 font-bold text-base">
+                  ${product.priceSell?.toFixed(2)}
+                </p>
               </div>
               <button
                 onClick={() => handleAddToCart(product)}
-                disabled={product.stock === 0}
-                className="w-full mt-3 bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
+                disabled={product.quantity === 0}
+                className="w-[72px] h-[36px] bg-blue-800 text-white rounded text-sm font-bold items-center space-x-2 hover:bg-blue-400 transition inline-flex gap-1 justify-center disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
               >
                 <ShoppingCart className="h-4 w-4" />
-                Add to Cart
+                Add
               </button>
             </div>
           </div>
@@ -161,6 +158,9 @@ const Shop = () => {
           <p className="text-gray-500">Try adjusting your search or filter criteria</p>
         </div>
       )}
+      
+      {/* Floating Cart */}
+      <FloatingCart />
     </div>
   );
 };
