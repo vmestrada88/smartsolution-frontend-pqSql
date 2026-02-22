@@ -19,7 +19,7 @@ const CheckoutForm = () => {
     event.preventDefault();
 
     if (CHECKOUT_BLOCKED) {
-      const warning = 'Checkout is temporarily disabled. Payments cannot be completed in this environment.';
+      const warning = '🚩 Checkout is temporarily disabled. Payments cannot be completed. ☎️ Please call 786-824-4191.';
       toast.error(warning);
       return;
     }
