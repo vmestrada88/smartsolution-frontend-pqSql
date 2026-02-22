@@ -5,6 +5,8 @@ import { clearCart } from '../../../store/cartSlice';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 
+const CHECKOUT_BLOCKED = import.meta.env.VITE_BLOCK_CHECKOUT !== 'false';
+
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
@@ -15,6 +17,12 @@ const CheckoutForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (CHECKOUT_BLOCKED) {
+      const warning = 'Checkout is temporarily disabled. Payments cannot be completed in this environment.';
+      toast.error(warning);
+      return;
+    }
 
     if (!stripe || !elements) {
       return;

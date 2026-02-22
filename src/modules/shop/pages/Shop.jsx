@@ -24,7 +24,9 @@ const Shop = () => {
 
   useEffect(() => {
     loadProducts();
-    dispatch(fetchCart()); // Load cart when component mounts
+    if (localStorage.getItem('token')) {
+      dispatch(fetchCart()); // Load cart when component mounts
+    }
   }, [dispatch]);
 
   useEffect(() => {

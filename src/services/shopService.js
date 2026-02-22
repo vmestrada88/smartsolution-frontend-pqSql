@@ -17,6 +17,9 @@ const authHeaders = () => {
 
 // ─── Cart ────────────────────────────────────────────────────
 export const fetchCart = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) return [];
+
   const res = await fetch(CART_BASE, { headers: authHeaders() });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
