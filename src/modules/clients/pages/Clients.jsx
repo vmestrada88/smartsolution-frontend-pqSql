@@ -1,19 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { api, extractError } from '../../../services/httpClient';
+import { useEffect, useState } from 'react';
+import { api } from '../../../services/httpClient';
+import '../../../index.css';
 import CreateClientForm from '../components/CreateClientForm';
 import ClientList from '../components/ClientList';
 import Button from '../../../components/ui/Button';
 
-
 const Clients = () => {
   const [showForm, setShowForm] = useState(false);
-  const [clients, setClients] = useState([]);
 
-
+  /**
+   * Fetches the list of clients from the backend API.
+   * Makes a GET request to the '/clients' endpoint using the api instance.
+   * On success, logs the fetched client data to the console.
+   * On failure, logs an error message to the console.
+   * 
+   * @async
+   * @function fetchClients
+   * @returns {Promise<void>} Resolves when the client data is fetched and logged.
+   * 
+   * Este archivo se encarga de gestionar la obtención de clientes desde el backend,
+   * permitiendo visualizar en consola los datos obtenidos o los errores en caso de fallo.
+   */
   const fetchClients = async () => {
     try {
       const res = await api.get('/clients');
-      setClients(res.data);
     } catch (err) {
       console.error('Error loading clients:', err);
     }
@@ -33,11 +43,11 @@ const Clients = () => {
           {showForm ? 'Close Form' : 'Add New Client'}
         </Button>
         {showForm && <CreateClientForm />}
-        <div >
+        <div>
           <ClientList />
         </div>
-
-      </div></>
+      </div>
+    </>
   );
 };
 

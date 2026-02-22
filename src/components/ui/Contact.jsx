@@ -4,7 +4,7 @@
  * @description Renders the contact section with phone and email details for Smart Solution for Living.
  * @returns {JSX.Element} Contact section element.
  */
-import React from "react";
+import React from 'react';
 import { Mail, Phone } from 'lucide-react';
 
 const Contact = () => {
@@ -26,8 +26,8 @@ const Contact = () => {
 
           <div className="flex items-center gap-3">
             <Mail className="text-teal-500" />
-            <a href="mailto:smartsolutionforliving@gmail.com" className="text-lg text-gray-800 hover:text-teal-600 transition">
-              smartsolutionforliving@gmail.com
+            <a href="mailto:info@smartsolutionfl.com" className="text-lg text-gray-800 hover:text-teal-600 transition">
+              info@smartsolutionfl.com
             </a>
           </div>
         </div>

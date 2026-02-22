@@ -1,4 +1,3 @@
-
 /**
  * CreateClientForm component for creating a new client with multiple contacts.
  *
@@ -32,12 +31,11 @@
  * Handles form submission, sends client data to the API, and resets the form on success.
  * @param {React.FormEvent<HTMLFormElement>} e - The form submit event.
  */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Button from '../../../components/ui/Button';
-import toast
+import toast from 'react-hot-toast';
 
-  from 'react-hot-toast';
 const CreateClientForm = () => {
   const [clientData, setClientData] = useState({
     companyName: '',
@@ -73,8 +71,20 @@ const CreateClientForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/clients', clientData);
-      toast.success('Cliente creado exitosamente');
+      const token = localStorage.getItem('token'); // Get token from localStorage
+      if (!token) {
+        toast.error('No authentication token found. Please log in.');
+        return;
+      }
+
+      await axios.post('http://localhost:5000/api/clients', clientData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Include token in header
+        },
+      });
+
+      toast.success('Client created successfully');
       setClientData({
         companyName: '',
         address: '',
@@ -87,35 +97,102 @@ const CreateClientForm = () => {
       toast.error('Error creating client: ' + (err.response?.data?.message || err.message));
     }
   };
+
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <h2 className="text-xl font-bold mb-4">Create New Client</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="companyName" placeholder="Company Name" className="w-full p-2 border" onChange={handleChange} value={clientData.companyName} />
-        <input name="address" placeholder="Address" className="w-full p-2 border" onChange={handleChange} value={clientData.address} />
-        <input name="city" placeholder="City" className="w-full p-2 border" onChange={handleChange} value={clientData.city} />
-        <input name="state" placeholder="State" className="w-full p-2 border" onChange={handleChange} value={clientData.state} />
-        <input name="zip" placeholder="Zip Code" className="w-full p-2 border" onChange={handleChange} value={clientData.zip} />
+        <input
+          name="companyName"
+          placeholder="Company Name"
+          className="w-full p-2 border"
+          onChange={handleChange}
+          value={clientData.companyName}
+          required
+        />
+        <input
+          name="address"
+          placeholder="Address"
+          className="w-full p-2 border"
+          onChange={handleChange}
+          value={clientData.address}
+          required
+        />
+        <input
+          name="city"
+          placeholder="City"
+          className="w-full p-2 border"
+          onChange={handleChange}
+          value={clientData.city}
+          required
+        />
+        <input
+          name="state"
+          placeholder="State"
+          className="w-full p-2 border"
+          onChange={handleChange}
+          value={clientData.state}
+          required
+        />
+        <input
+          name="zip"
+          placeholder="Zip Code"
+          className="w-full p-2 border"
+          onChange={handleChange}
+          value={clientData.zip}
+          required
+        />
 
         <h3 className="text-lg font-semibold mt-4">Contacts</h3>
         {clientData.contacts.map((contact, index) => (
           <div key={index} className="border p-2 space-y-2">
-            <input name="name" placeholder="Name" className="w-full p-2 border" onChange={(e) => handleContactChange(index, e)} value={contact.name} />
-            <input name="email" placeholder="Email" className="w-full p-2 border" onChange={(e) => handleContactChange(index, e)} value={contact.email} />
-            <input name="phone" placeholder="Phone" className="w-full p-2 border" onChange={(e) => handleContactChange(index, e)} value={contact.phone} />
-            <input name="role" placeholder="Role (e.g. owner, assistant)" className="w-full p-2 border" onChange={(e) => handleContactChange(index, e)} value={contact.role} />
-            <button type="button" className="bg-red-500 text-white px-2 py-1 rounded" onClick={() => removeContact(index)}>Remove</button>
+            <input
+              name="name"
+              placeholder="Name"
+              className="w-full p-2 border"
+              onChange={(e) => handleContactChange(index, e)}
+              value={contact.name}
+              required
+            />
+            <input
+              name="email"
+              placeholder="Email"
+              className="w-full p-2 border"
+              onChange={(e) => handleContactChange(index, e)}
+              value={contact.email}
+              required
+            />
+            <input
+              name="phone"
+              placeholder="Phone"
+              className="w-full p-2 border"
+              onChange={(e) => handleContactChange(index, e)}
+              value={contact.phone}
+              required
+            />
+            <input
+              name="role"
+              placeholder="Role (e.g. owner, assistant)"
+              className="w-full p-2 border"
+              onChange={(e) => handleContactChange(index, e)}
+              value={contact.role}
+              required
+            />
+            <button
+              type="button"
+              className="bg-red-500 text-white px-2 py-1 rounded"
+              onClick={() => removeContact(index)}
+            >
+              Remove
+            </button>
           </div>
         ))}
 
-        <Button
-          type="button"
-          onClick={addContact}>
-          Add Contact</Button>
-
-        <Button type="submit">
-          Save Client
+        <Button type="button" onClick={addContact}>
+          Add Contact
         </Button>
+
+        <Button type="submit">Save Client</Button>
       </form>
     </div>
   );
