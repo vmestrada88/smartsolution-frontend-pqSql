@@ -36,7 +36,8 @@ const Cart = () => {
     }
   };
 
-  const totalAmount = items.reduce((total, item) => total + (item.product.priceSell * item.quantity), 0);
+  const linePrice = (item) => item.product?.priceSell ?? item.product?.price ?? 0;
+  const totalAmount = items.reduce((total, item) => total + (linePrice(item) * item.quantity), 0);
 
   if (loading) {
     return (
@@ -90,7 +91,7 @@ const Cart = () => {
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-800">{item.product.name}</h3>
                       <p className="text-gray-600 text-sm">{item.product.description}</p>
-                      <p className="text-teal-600 font-semibold mt-1">${item.product.price}</p>
+                      <p className="text-teal-600 font-semibold mt-1">${linePrice(item).toFixed(2)}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -109,7 +110,7 @@ const Cart = () => {
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-semibold text-gray-800">
-                        ${(item.product.price * item.quantity).toFixed(2)}
+                        ${(linePrice(item) * item.quantity).toFixed(2)}
                       </p>
                       <button
                         onClick={() => handleRemoveItem(item.id)}

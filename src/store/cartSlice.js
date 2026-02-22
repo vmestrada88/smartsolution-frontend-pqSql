@@ -10,7 +10,7 @@ export const fetchCart = createAsyncThunk(
       return cart;
     } catch (error) {
       // If not authenticated (401), return empty cart instead of error
-      if (error.message.includes('401')) {
+      if (error.message.includes('401') || error.message.includes('403')) {
         return [];
       }
       return rejectWithValue(error.message);
@@ -44,7 +44,7 @@ export const addToCartAsync = createAsyncThunk(
       return cartItem;
     } catch (error) {
       // If not authenticated (401), add locally with dummy data
-      if (error.message.includes('401')) {
+      if (error.message.includes('401') || error.message.includes('403')) {
         return {
           id: Date.now(),
           productId: payload.productId || payload,
@@ -153,6 +153,9 @@ export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlic
 // Selectors
 export const selectCartItems = (state) => state.cart.items;
 export const selectCartCount = (state) => state.cart.items.reduce((total, item) => total + item.quantity, 0);
-export const selectCartTotal = (state) => state.cart.items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+export const selectCartTotal = (state) => state.cart.items.reduce(
+  (total, item) => total + ((item.product?.priceSell ?? item.product?.price ?? 0) * item.quantity),
+  0
+);
 
 export default cartSlice.reducer;
