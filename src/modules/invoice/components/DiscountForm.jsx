@@ -1,5 +1,12 @@
-// src/components/DiscountForm.jsx
-import React, { useState } from 'react';
+/**
+ * DiscountForm component allows users to add a discount by entering a description and amount.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Function} props.onAdd - Callback function to handle adding a new discount. Receives an object with `name` (string) and `dCost` (number).
+ *
+ */
+import { useState } from 'react';
 import Button from '../../../components/ui/Button';
 
 export default function DiscountForm({ onAdd }) {

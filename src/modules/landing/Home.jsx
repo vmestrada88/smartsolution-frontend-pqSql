@@ -1,4 +1,11 @@
-import React from 'react';
+/**
+ * Home component serves as the landing page of the application.
+ *
+ * @component
+ * @description The main landing page featuring company logo, welcome message, 
+ *              contact button, and services section. Includes a modal for contact information.
+ * @returns {JSX.Element} Rendered home page with logo, description, contact button, and services.
+ */
 import { useState } from 'react';
 
 import logo from '../../assets/logo.jpg';

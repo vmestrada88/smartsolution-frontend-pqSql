@@ -1,4 +1,18 @@
-import React from 'react';
+/**
+ * Services component displays a list of smart home and security services offered.
+ *
+ * - Imports icons from 'lucide-react' for visual representation of each service.
+ * - Defines an array of service objects, each containing:
+ *    - title: The name of the service.
+ *    - icon: The corresponding icon component.
+ *    - description: A brief explanation of the service.
+ * - Renders a section with a heading and description.
+ * - Displays services in a responsive grid layout.
+ * - Each service is shown in a card with its icon, title, and description.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Services section with a grid of service cards.
+ */
 import { ShieldCheck, Home, Lock, Volume2 } from 'lucide-react';
 
 const services = [

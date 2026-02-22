@@ -1,5 +1,28 @@
-import React from 'react';
+/**
+ * ContactModal component displays a modal dialog with contact information.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {boolean} props.isOpen - Controls whether the modal is visible.
+ * @param {function} props.onClose - Callback function to close the modal.
+ *
+ * @returns {JSX.Element|null} The modal element if open, otherwise null.
+ *
+ * // Import icons from lucide-react for UI elements (close, mail, phone)
+ * // Import PropTypes for prop type validation
+ * // If the modal is not open, render nothing (null)
+ * // Modal overlay: covers the screen with a semi-transparent background
+ * // Modal content: centered box with white background and padding
+ * // Close button: top-right, calls onClose when clicked
+ * // Modal title: "Contact Us", centered and bold
+ * // Modal description: short message, centered
+ * // Contact options: phone and email, each with icon and clickable link
+ * // Phone: tel: link, teal icon, hover effect
+ * // Email: mailto: link, teal icon, hover effect
+ * // PropTypes: enforce isOpen as boolean and onClose as function
+ */
 import { X, Mail, Phone } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 export default function ContactModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -28,13 +51,18 @@ export default function ContactModal({ isOpen, onClose }) {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Mail className="text-teal-500" />
-            <a href="mailto:smartsolutionforliving@gmail.com" className="text-lg text-gray-800 hover:text-teal-600 transition">
-              smartsolutionforliving@gmail.com
+            <a href="mailto:info@smartsolutionfl.com" className="text-lg text-gray-800 hover:text-teal-600 transition">
+              info@smartsolutionfl.com
             </a>
           </div>
         </div>
       </div>
     </div>
   );
+  
 }
 
+ContactModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};

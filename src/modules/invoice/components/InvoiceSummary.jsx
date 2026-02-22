@@ -1,4 +1,35 @@
-import React from 'react';
+/**
+ * InvoiceSummary component displays a summary of the invoice including selected products,
+ * extra costs, discounts, subtotal, tax, total, and notes. It allows updating quantities,
+ * removing items, extra costs, and discounts.
+ *
+ * @component
+ * @param {Object[]} selectedItems - Array of selected product items for the invoice.
+ * @param {string} selectedItems[].name - Name of the product.
+ * @param {string} selectedItems[].category - Category of the product (used for labor cost).
+ * @param {number} selectedItems[].quantity - Quantity of the product.
+ * @param {number} selectedItems[].priceSell - Unit price of the product.
+ * @param {string|number} selectedItems[].\_id - Unique identifier for the product.
+ * @param {Object[]} [extraCosts=[]] - Array of additional charges to be added to the invoice.
+ * @param {string} extraCosts[].name - Name/description of the extra cost.
+ * @param {number} extraCosts[].cost - Amount of the extra cost.
+ * @param {Object[]} [discount=[]] - Array of discounts to be subtracted from the invoice.
+ * @param {string} discount[].name - Name/description of the discount.
+ * @param {number} discount[].dCost - Amount of the discount.
+ * @param {number} subtotal - The subtotal amount before tax and discounts.
+ * @param {number} tax - The tax amount applied to the subtotal.
+ * @param {number} total - The final total amount after all calculations.
+ * @param {function} removeFromInvoice - Function to remove a product from the invoice. Receives product ID.
+ * @param {function} updateQuantity - Function to update the quantity of a product. Receives product ID and new quantity.
+ * @param {function} removeExtraCost - Function to remove an extra cost. Receives the index of the extra cost.
+ * @param {function} removeDiscount - Function to remove a discount. Receives the index of the discount.
+ * @param {function} getLaborCost - Function to get the labor cost for a given product category.
+ * @param {React.Ref} invoiceRef - Ref to the invoice summary container (for printing or other DOM access).
+ * @param {string} notes - Optional notes to be displayed at the end of the invoice.
+ *
+ * @returns {JSX.Element} The rendered invoice summary component.
+ */
+import { fetchProducts } from '../../../services/productsService';
 
 export default function InvoiceSummary({
   selectedItems,
@@ -14,6 +45,7 @@ export default function InvoiceSummary({
   getLaborCost,
   invoiceRef,
   notes,
+  taxExempt = false,
 }) {
   return (
     <div ref={invoiceRef} className="bg-white p-6 rounded shadow w-full max-w-[800px] mx-auto">
@@ -78,10 +110,10 @@ export default function InvoiceSummary({
               {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
             </td>
             <td className="border px-4 py-2 text-right">
-              ${selectedItems.reduce((sum, item) => sum + item.priceSell, 0).toFixed(2)}
+              ${selectedItems.reduce((sum, item) => sum + (item.priceSell * item.quantity), 0).toFixed(2)}
             </td>
             <td className="border px-4 py-2 text-right">
-              ${selectedItems.reduce((sum, item) => sum + getLaborCost(item.category), 0).toFixed(2)}
+              ${selectedItems.reduce((sum, item) => sum + (getLaborCost(item.category) * item.quantity), 0).toFixed(2)}
             </td>
             <td className="border px-4 py-2 text-right">
               ${selectedItems.reduce((sum, item) => sum + (item.quantity * (item.priceSell + getLaborCost(item.category))), 0).toFixed(2)}
@@ -143,7 +175,13 @@ export default function InvoiceSummary({
           Subtotal: <span className="font-semibold">${subtotal.toFixed(2)}</span>
         </p>
         <p>
-          Tax (7%): <span className="font-semibold">${tax.toFixed(2)}</span>
+          Tax (7%): <span className="font-semibold">
+            {taxExempt ? (
+              <span className="text-green-600">$0.00 (Tax Exempt)</span>
+            ) : (
+              `$${tax.toFixed(2)}`
+            )}
+          </span>
         </p>
         <p className="text-xl font-bold">Total: ${total.toFixed(2)}</p>
       </div>

@@ -1,10 +1,8 @@
-import React from 'react';
-
 /**
  * ProductHeader component displays the header section for the Products page.
  * It includes the main title and a descriptive subtitle.
  */
-const ProductHeader = () => {
+export default function ProductHeader() {
   return (
     <>
       {/* Header */}
@@ -15,6 +13,4 @@ const ProductHeader = () => {
       </h2>
     </>
   );
-};
-
-export default ProductHeader;
+}

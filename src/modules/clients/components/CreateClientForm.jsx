@@ -31,7 +31,7 @@
  * Handles form submission, sends client data to the API, and resets the form on success.
  * @param {React.FormEvent<HTMLFormElement>} e - The form submit event.
  */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Button from '../../../components/ui/Button';
 import toast from 'react-hot-toast';

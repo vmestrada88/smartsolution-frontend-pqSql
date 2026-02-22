@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchProducts } from '../../../services';
 import '../../../index.css';
 import { ProductList, ProductHeader, InvoiceTable, ProposalFormModal } from '../components';
@@ -18,14 +18,20 @@ function Products() {
   useEffect(() => {
     // Define an async function to load products
     const loadProducts = async () => {
-      // Fetch products from the backend service
-      const data = await fetchProducts();
-      // Normalize the data: ensure it's an array and map to add _id if Missing
-      const normalized = Array.isArray(data)
-        ? data.map(p => ({ ...p, _id: p.id ?? p.id }))
-        : [];
-      // Set the normalized products in state
-      setProducts(normalized);
+      try {
+        // Fetch products from the backend service
+        const data = await fetchProducts();
+        // Normalize the data: ensure it's an array and map to add _id if Missing
+        const normalized = Array.isArray(data)
+          ? data.map(p => ({ ...p, _id: p.id ?? p.id }))
+          : [];
+        // Set the normalized products in state
+        setProducts(normalized);
+      } catch (error) {
+        console.error('Error loading products:', error);
+        // Set empty array on error to prevent crashes
+        setProducts([]);
+      }
     };
     // Call the loadProducts function
     loadProducts();
@@ -68,10 +74,32 @@ function Products() {
   };
 
   const removeFromInvoice = (id) => {
-    const confirmDelete = window.confirm('¿Desea eliminar este producto?');
-    if (confirmDelete) {
-      setSelectedItems(selectedItems.filter(item => item._id !== id));
-    }
+    toast(
+      (t) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <span>Do you want to remove this product?</span>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+            <button
+              className="toast-button primary"
+              onClick={() => {
+                setSelectedItems(selectedItems.filter(item => item._id !== id));
+                toast.dismiss(t.id);
+                toast.success('Product removed');
+              }}
+            >
+              Yes
+            </button>
+            <button
+              className="toast-button dismiss"
+              onClick={() => toast.dismiss(t.id)}
+            >
+            No
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 6000 }
+    );
   };
 
   const exportProductsPDF = () => {

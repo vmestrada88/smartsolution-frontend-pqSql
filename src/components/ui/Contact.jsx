@@ -26,8 +26,8 @@ const Contact = () => {
 
           <div className="flex items-center gap-3">
             <Mail className="text-teal-500" />
-            <a href="mailto:smartsolutionforliving@gmail.com" className="text-lg text-gray-800 hover:text-teal-600 transition">
-              smartsolutionforliving@gmail.com
+            <a href="mailto:info@smartsolutionfl.com" className="text-lg text-gray-800 hover:text-teal-600 transition">
+              info@smartsolutionfl.com
             </a>
           </div>
         </div>

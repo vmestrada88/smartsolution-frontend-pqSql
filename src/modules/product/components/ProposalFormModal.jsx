@@ -1,5 +1,5 @@
-import React from 'react';
 import toast from 'react-hot-toast';
+import PropTypes from 'prop-types';
 
 /**
  * ProposalFormModal component displays a modal form for requesting service proposals.
@@ -77,6 +77,18 @@ const ProposalFormModal = ({ showProposalForm, setShowProposalForm, proposalData
       </div>
     </div>
   );
+};
+
+ProposalFormModal.propTypes = {
+  showProposalForm: PropTypes.bool.isRequired,
+  setShowProposalForm: PropTypes.func.isRequired,
+  proposalData: PropTypes.shape({
+    name: PropTypes.string,
+    contact: PropTypes.string,
+    address: PropTypes.string,
+    notes: PropTypes.string
+  }).isRequired,
+  setProposalData: PropTypes.func.isRequired
 };
 
 export default ProposalFormModal;

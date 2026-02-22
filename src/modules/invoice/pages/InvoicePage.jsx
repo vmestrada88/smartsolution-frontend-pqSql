@@ -1,11 +1,34 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+/**
+ * InvoicePage component for generating invoices or proposals.
+ *
+ * This page allows users to:
+ * - Select products to add to an invoice or proposal.
+ * - Specify labor hours and hourly rate.
+ * - Add extra costs and discounts.
+ * - Select a client from a list.
+ * - Add custom notes to the document.
+ * - View a summary of the invoice/proposal including subtotal, tax, and total.
+ * - Download the invoice/proposal as a PDF.
+ *
+ * State:
+ * - products: Array of available products.
+ * - selectedItems: Array of products added to the invoice/proposal.
+ * - laborHours: Number of labor hours.
+ * - hourlyRate: Rate per labor hour.
+ * - extraCosts: Array of additional costs.
+ * - discount: Array of discounts applied.
+ * - documentType: Type of document ("invoice" or "proposal").
+ * - notes: Additional notes for the document.
+ * - selectedClient: The client selected for the invoice/proposal.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered InvoicePage component.
+ */
+import { useEffect, useState, useRef } from 'react';
 import { fetchProducts } from '../../../services/productsService';
-
 import getLaborCost from '../../../util/LaborCost';
 import '../../../index.css';
-
-
 import DiscountForm from '../components/DiscountForm';
 import ExtraCostForm from '../components/ExtraCostForm';
 import InvoiceSummary from '../components/InvoiceSummary';
@@ -19,13 +42,15 @@ const TAX_RATE = 0.07;
 export const InvoicePage = () => {
   const [products, setProducts] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  /** @type {number} Labor hours for calculation */
   const [laborHours, setLaborHours] = useState(0);
+  /** @type {number} Hourly rate for labor calculation */
   const [hourlyRate, setHourlyRate] = useState(100);
   const [extraCosts, setExtraCosts] = useState([]);
   const [discount, setDiscount] = useState([]);
   const [documentType, setDocumentType] = useState('invoice'); // "invoice" or "proposal"
   const [notes, setNotes] = useState(''); // Notes for the invoice
-
+  const [taxExempt, setTaxExempt] = useState(false); // Tax exemption flag
   const invoiceRef = useRef();
   const [selectedClient, setSelectedClient] = useState(null);
   useEffect(() => {
@@ -69,7 +94,6 @@ export const InvoicePage = () => {
     );
   };
 
-
   const subtotalProducts = selectedItems.reduce(
     (sum, item) => sum + item.quantity * (item.priceSell + getLaborCost(item.category)),
     0
@@ -79,26 +103,24 @@ export const InvoicePage = () => {
   const totalExtras = extraCosts.reduce((acc, cur) => acc + cur.cost, 0);
   const totalDiscount = discount.reduce((acc, cur) => acc + cur.dCost, 0);
   const subtotal = subtotalProducts + totalLabor + totalExtras - totalDiscount;
-  const tax = subtotal * TAX_RATE;
+  const tax = taxExempt ? 0 : subtotal * TAX_RATE;
   const total = subtotal + tax;
-
-
 
   const exportPDF = () => {
     const { generatePDF } = BasicInvoicePDF({
-
       clientName: selectedClient ? (selectedClient.companyName || selectedClient.name) : 'Not selected',
       clientAddress: selectedClient ? (selectedClient.companyAddress || selectedClient.address) : 'Not selected',
       clientCity: selectedClient ? (selectedClient.city || selectedClient.city) : 'Not selected',
       clientState: selectedClient ? (selectedClient.state || selectedClient.state) : 'Not selected',
       clientZip: selectedClient ? (selectedClient.zip || selectedClient.zip) : 'Not selected',
       selectedItems,
-      laborHours,
-      hourlyRate,
+      laborHours: laborHours,
+      hourlyRate: hourlyRate,
       extraCosts,
       discount,
       documentType,
       notes,
+      taxExempt,
     });
 
     generatePDF();
@@ -110,8 +132,6 @@ export const InvoicePage = () => {
   const removeDiscount = (index) => {
     setDiscount(discount.filter((_, i) => i !== index));
   };
-
-
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -146,8 +166,49 @@ export const InvoicePage = () => {
         </label>
       </div>
 
+      <div className="mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50">
+        <label className="flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={taxExempt}
+            onChange={(e) => setTaxExempt(e.target.checked)}
+            className="mr-2 h-4 w-4"
+          />
+          <span className="font-semibold">Tax Exempt</span>
+          <span className="ml-2 text-sm text-gray-600">(No taxes will be applied to this invoice)</span>
+        </label>
+      </div>
 
       <ClientSelect onSelectClient={setSelectedClient} />
+      
+      {/* Labor Hours and Rate Section */}
+      <div className="mb-6 p-4 border border-gray-300 rounded-lg bg-gray-50">
+        <h3 className="text-lg font-semibold mb-3">Labor</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Labor Hours</label>
+            <input
+              type="number"
+              value={laborHours}
+              onChange={(e) => setLaborHours(parseFloat(e.target.value) || 0)}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              min="0"
+              step="0.5"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Hourly Rate ($)</label>
+            <input
+              type="number"
+              value={hourlyRate}
+              onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              min="0"
+              step="5"
+            />
+          </div>
+        </div>
+      </div>
 
       <ExtraCostForm onAdd={(cost) => setExtraCosts([...extraCosts, cost])} />
 
@@ -168,10 +229,6 @@ export const InvoicePage = () => {
         </p>
       </div>
 
-
-
-
-
       <InvoiceSummary
         selectedItems={selectedItems}
         extraCosts={extraCosts}
@@ -188,9 +245,8 @@ export const InvoicePage = () => {
         clientName={selectedClient ? (selectedClient.companyName || selectedClient.name) : 'Not selected'}
         documentType={documentType}
         notes={notes}
-
+        taxExempt={taxExempt}
       />
-
 
       <DownloadPDFButton onClick={exportPDF} />
 

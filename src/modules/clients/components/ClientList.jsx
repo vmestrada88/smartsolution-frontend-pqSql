@@ -1,6 +1,18 @@
+/**
+ * ClientList component fetches and displays a list of clients.
+ *
+ * - Fetches client data from the API endpoint `/clients` on mount.
+ * - Normalizes client objects to ensure each has a unique `_id` property.
+ * - Displays a styled list of clients with company name, address, city, state, zip, and number of contacts.
+ * - Each client item is clickable and navigates to the client's detail page using React Router.
+ * - Shows a message if no clients are available.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered client list component.
+ */
 //smartsolution-frontend\src\shared\components\ClientList.jsx
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../../services';
 import { useNavigate } from 'react-router-dom';
 import { ShieldUser } from 'lucide-react';
