@@ -53,10 +53,14 @@ export const removeCartItem = async (id) => {
 
 // ─── Orders ──────────────────────────────────────────────────
 export const createOrder = async (shippingAddress) => {
+  const payload = (shippingAddress && typeof shippingAddress === 'object' && shippingAddress.shippingAddress)
+    ? shippingAddress
+    : { shippingAddress };
+
   const res = await fetch(ORDERS_BASE, {
     method: 'POST',
     headers: authHeaders(),
-    body: JSON.stringify({ shippingAddress }),
+    body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
