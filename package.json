@@ -9,7 +9,7 @@
   },
   "scripts": {
     "prepare": "husky",
-    "dev": "vite --host",
+    "dev": "npx vite --host",
     "lint": "eslint .",
     "build": "vite build",
     "preview": "vite preview",
@@ -39,6 +39,7 @@
     "react-hot-toast": "^2.6.0",
     "react-i18next": "^15.6.0",
     "react-redux": "^8.1.2",
+    "react-router": "^7.7.0",
     "react-router-dom": "^7.7.0",
     "react-to-print": "^3.1.1"
   },
@@ -51,6 +52,6 @@
     "husky": "^9.1.7",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
-    "vite": "^7.1.9"
+    "vite": "^7.2.4"
   }
 }
