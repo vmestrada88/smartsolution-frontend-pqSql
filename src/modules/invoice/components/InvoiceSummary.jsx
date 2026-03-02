@@ -45,11 +45,14 @@ export default function InvoiceSummary({
   getLaborCost,
   invoiceRef,
   notes,
+  documentType = 'invoice',
   taxExempt = false,
 }) {
+  const isProposal = documentType === 'proposal';
+
   return (
     <div ref={invoiceRef} className="bg-white p-6 rounded shadow w-full max-w-[800px] mx-auto">
-      <h3 className="text-xl font-semibold mb-4">Invoice Summary</h3>
+      <h3 className="text-xl font-semibold mb-4">{isProposal ? 'Proposal Summary' : 'Invoice Summary'}</h3>
 
       {/* PRODUCTOS */}
       <table className="w-full mb-4 border-collapse">
@@ -126,7 +129,7 @@ export default function InvoiceSummary({
       {/* EXTRA COSTS */}
       {extraCosts.length > 0 && (
         <div className="mb-4">
-          <h4 className="font-semibold mb-2">Other Charges</h4>
+          <h4 className="font-semibold mb-2">{isProposal ? 'Additional Proposal Charges' : 'Other Charges'}</h4>
           <ul className="list-disc list-inside space-y-1">
             {extraCosts.map((extra, idx) => (
               <li key={idx} className="flex justify-between items-center">
@@ -149,7 +152,7 @@ export default function InvoiceSummary({
       {/* DISCOUNTS */}
       {Array.isArray(discount) && discount.length > 0 && (
         <div className="mb-4">
-          <h4 className="font-semibold mb-2">Discounts</h4>
+          <h4 className="font-semibold mb-2">{isProposal ? 'Proposal Discounts' : 'Discounts'}</h4>
           <ul className="list-disc list-inside space-y-1">
             {discount.map((d, idx) => (
               <li key={idx} className="flex justify-between items-center">

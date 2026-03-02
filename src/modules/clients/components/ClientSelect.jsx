@@ -11,9 +11,13 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../../services';
 
-const ClientSelect = ({ onSelectClient }) => {
+const ClientSelect = ({ onSelectClient, selectedClientId: initialSelectedClientId = '' }) => {
   const [clients, setClients] = useState([]);
   const [selectedClientId, setSelectedClientId] = useState('');
+
+  useEffect(() => {
+    setSelectedClientId(initialSelectedClientId ? String(initialSelectedClientId) : '');
+  }, [initialSelectedClientId]);
 
   useEffect(() => {
     const fetchClients = async () => {

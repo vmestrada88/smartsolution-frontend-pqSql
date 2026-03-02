@@ -51,6 +51,8 @@ export const API_CONFIG = {
     PRODUCTS: '/products', 
     /** Invoice processing endpoints */
     INVOICES: '/invoices',
+    /** Proposal processing endpoints */
+    PROPOSALS: '/proposals',
     /** Authentication and authorization endpoints */
     AUTH: '/auth'
   }

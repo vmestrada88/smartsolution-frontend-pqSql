@@ -21,6 +21,11 @@ export default function InvoiceList() {
       const data = await fetchInvoices();
       setInvoices(data);
     } catch (error) {
+      if (String(error?.message || '').toLowerCase().includes('session expired')) {
+        toast.error('Session expired. Please login again.');
+        navigate('/login');
+        return;
+      }
       toast.error('Error loading invoices');
       console.error(error);
     } finally {
@@ -56,12 +61,20 @@ export default function InvoiceList() {
           <h1 className="text-3xl font-bold text-gray-800">Invoices</h1>
           <p className="text-gray-600 mt-1">Manage and track your invoices</p>
         </div>
-        <Link
-          to="/invoice"
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-md"
-        >
-          + Create Invoice
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            to="/proposals"
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition-colors"
+          >
+            View Proposals
+          </Link>
+          <Link
+            to="/invoice"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-md"
+          >
+            + Create Invoice
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}

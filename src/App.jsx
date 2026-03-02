@@ -21,6 +21,7 @@ import ClientDetails from './modules/clients/components/ClientDetails';
 import { InvoicePage } from './modules/invoice/pages/InvoicePage';
 import InvoiceList from './modules/invoice/pages/InvoiceList';
 import InvoiceDetail from './modules/invoice/pages/InvoiceDetail';
+import ProposalList from './modules/invoice/pages/ProposalList';
 import Login from './modules/authentication/pages/Login';
 import DashboardAdmin from './modules/dash/admin/DashboardAdmin';
 import DashboardTechnician from './modules/dash/technician/DashboardTechnician';
@@ -119,6 +120,24 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <InvoiceDetail />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/proposals"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <ProposalList />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/proposals/:proposalId/edit"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <InvoicePage />
                 </ProtectedRoute>
               }
             />
