@@ -51,6 +51,9 @@ export const InvoicePage = () => {
   const [laborHours, setLaborHours] = useState(0);
   /** @type {number} Hourly rate for labor calculation */
   const [hourlyRate, setHourlyRate] = useState(100);
+  const [laborHoursInput, setLaborHoursInput] = useState('0');
+  const [hourlyRateInput, setHourlyRateInput] = useState('100');
+  const [appliedLabor, setAppliedLabor] = useState({ hours: 0, rate: 100 });
   const [extraCosts, setExtraCosts] = useState([]);
   const [discount, setDiscount] = useState([]);
   const [documentType, setDocumentType] = useState('invoice'); // "invoice" or "proposal"
@@ -87,6 +90,14 @@ export const InvoicePage = () => {
         const proposalTax = Number(proposal.tax || 0);
         const proposalSubtotal = Number(proposal.subtotal || 0);
         setTaxExempt(proposalTax === 0 && proposalSubtotal > 0);
+
+        const proposalLaborHours = Number(proposal.laborHours || 0);
+        const proposalLaborRate = Number(proposal.laborRate || proposal.hourlyRate || 100);
+        setLaborHours(proposalLaborHours);
+        setHourlyRate(proposalLaborRate);
+        setLaborHoursInput(String(proposalLaborHours));
+        setHourlyRateInput(String(proposalLaborRate));
+        setAppliedLabor({ hours: proposalLaborHours, rate: proposalLaborRate });
 
         if (proposal.client) {
           const normalizedClient = {
@@ -154,7 +165,7 @@ export const InvoicePage = () => {
     0
   );
 
-  const totalLabor = laborHours * hourlyRate;
+  const totalLabor = appliedLabor.hours * appliedLabor.rate;
   const totalExtras = extraCosts.reduce((acc, cur) => acc + cur.cost, 0);
   const totalDiscount = discount.reduce((acc, cur) => acc + cur.dCost, 0);
   const subtotal = subtotalProducts + totalLabor + totalExtras - totalDiscount;
@@ -169,8 +180,8 @@ export const InvoicePage = () => {
       clientState: selectedClient ? (selectedClient.state || selectedClient.state) : 'Not selected',
       clientZip: selectedClient ? (selectedClient.zip || selectedClient.zip) : 'Not selected',
       selectedItems,
-      laborHours: laborHours,
-      hourlyRate: hourlyRate,
+      hourlyRate: appliedLabor.rate,
+      laborHours: appliedLabor.hours,
       extraCosts,
       discount,
       documentType,
@@ -248,8 +259,8 @@ export const InvoicePage = () => {
         await createInvoice({
           clientId: Number(clientId),
           date: new Date().toISOString(),
-          laborHours,
-          laborRate: hourlyRate,
+          laborHours: appliedLabor.hours,
+          laborRate: appliedLabor.rate,
           taxRate: TAX_RATE,
           taxExempt,
           totalAmount: total,
@@ -275,6 +286,43 @@ export const InvoicePage = () => {
     setDiscount(discount.filter((_, i) => i !== index));
   };
 
+  const parsePositiveNumber = (value, fallback = 0) => {
+    const parsed = Number.parseFloat(value);
+    if (Number.isNaN(parsed) || parsed < 0) return fallback;
+    return parsed;
+  };
+
+  const applyLabor = () => {
+    const parsedHours = parsePositiveNumber(laborHoursInput, 0);
+    const parsedRate = parsePositiveNumber(hourlyRateInput, 0);
+
+    setLaborHours(parsedHours);
+    setHourlyRate(parsedRate);
+    setLaborHoursInput(String(parsedHours));
+    setHourlyRateInput(String(parsedRate));
+    setAppliedLabor({ hours: parsedHours, rate: parsedRate });
+  };
+
+  const clearLabor = () => {
+    const parsedRate = parsePositiveNumber(hourlyRateInput, 0);
+    setLaborHours(0);
+    setLaborHoursInput('0');
+    setHourlyRate(parsedRate);
+    setHourlyRateInput(String(parsedRate));
+    setAppliedLabor({ hours: 0, rate: parsedRate });
+  };
+
+  const updateAppliedLabor = ({ hours, rate }) => {
+    const nextHours = typeof hours === 'number' ? Math.max(0, hours) : appliedLabor.hours;
+    const nextRate = typeof rate === 'number' ? Math.max(0, rate) : appliedLabor.rate;
+
+    setAppliedLabor({ hours: nextHours, rate: nextRate });
+    setLaborHours(nextHours);
+    setHourlyRate(nextRate);
+    setLaborHoursInput(String(nextHours));
+    setHourlyRateInput(String(nextRate));
+  };
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h2 className="text-2xl font-bold mb-6">Invoice or Propousal Generator</h2>
@@ -288,6 +336,7 @@ export const InvoicePage = () => {
       <ProductList
         products={products}
         addToInvoice={addToInvoice}
+        onProductCreated={(newProduct) => setProducts((prev) => [...prev, newProduct])}
       />
 
       <div className="mb-4">
@@ -340,8 +389,14 @@ export const InvoicePage = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Labor Hours</label>
             <input
               type="number"
-              value={laborHours}
-              onChange={(e) => setLaborHours(parseFloat(e.target.value) || 0)}
+              value={laborHoursInput}
+              onChange={(e) => setLaborHoursInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  applyLabor();
+                }
+              }}
               className="w-full p-2 border border-gray-300 rounded-md"
               min="0"
               step="0.5"
@@ -351,13 +406,38 @@ export const InvoicePage = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Hourly Rate ($)</label>
             <input
               type="number"
-              value={hourlyRate}
-              onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
+              value={hourlyRateInput}
+              onChange={(e) => setHourlyRateInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  applyLabor();
+                }
+              }}
               className="w-full p-2 border border-gray-300 rounded-md"
               min="0"
               step="5"
             />
           </div>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={applyLabor}
+            className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition"
+          >
+            Insert Labor
+          </button>
+          <button
+            type="button"
+            onClick={clearLabor}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+          >
+            Clear Labor
+          </button>
+          <span className="text-sm text-gray-700">
+            Applied: {appliedLabor.hours}h x ${appliedLabor.rate.toFixed(2)} = ${totalLabor.toFixed(2)}
+          </span>
         </div>
       </div>
 
@@ -397,6 +477,11 @@ export const InvoicePage = () => {
         documentType={documentType}
         notes={notes}
         taxExempt={taxExempt}
+        laborHours={appliedLabor.hours}
+        hourlyRate={appliedLabor.rate}
+        totalLabor={totalLabor}
+        onUpdateLabor={(nextLabor) => updateAppliedLabor(nextLabor)}
+        onRemoveLabor={clearLabor}
       />
 
       <div className="mt-4">
