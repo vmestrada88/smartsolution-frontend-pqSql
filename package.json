@@ -14,7 +14,10 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:run:all": "cypress run --spec 'cypress/e2e/*.cy.js'",
-    "test:e2e": "cypress run"
+    "test:e2e": "cypress run",
+    "demo": "cypress run --config-file cypress.demo.config.js",
+    "demo:open": "cypress open --config-file cypress.demo.config.js",
+    "demo:single": "cypress run --config-file cypress.demo.config.js --spec"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.8",
