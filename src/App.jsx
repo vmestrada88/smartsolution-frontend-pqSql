@@ -29,10 +29,9 @@ import DashboardClient from './modules/dash/client/DashboardClient';
 
 import ProtectedRoute from './modules/authentication/components/ProtectedRoute';
 import Shop from './modules/shop/pages/Shop';
-import Cart from './modules/shop/pages/Cart';
-import Checkout from './modules/shop/pages/Checkout';
 import Orders from './modules/shop/pages/Orders';
 import AdminProducts from './modules/admin/products/pages/AdminProducts';
+import AdminAmazonShop from './modules/admin/amazon-shop/pages/AdminAmazonShop';
 
 function App() {
   return (
@@ -78,6 +77,12 @@ function App() {
               path="/admin/products"
               element={
                 <AdminProducts />
+              }
+            />
+            <Route
+              path="/admin/amazon-shop"
+              element={
+                <AdminAmazonShop />
               }
             />
             <Route
@@ -153,22 +158,6 @@ function App() {
             /> */}
 
             {/* SHOP */}
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute allowedRoles={['admin', 'client', 'technician']}>
-                  <Cart />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/checkout"
-              element={
-                <ProtectedRoute allowedRoles={['admin', 'client', 'technician']}>
-                  <Checkout />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="/orders"
               element={

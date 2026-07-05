@@ -1,6 +1,6 @@
 /**
  * DEMO 05 — Shop & Product Catalog
- * Muestra el catálogo de productos público y el flujo de la tienda.
+ * Muestra el catálogo de productos público y la tienda de recomendaciones (Amazon).
  * Video: cypress/videos/05-shop.mp4
  */
 
@@ -31,37 +31,32 @@ describe('Demo 05 — Shop & Product Catalog', () => {
       });
   });
 
-  it('browses the shop and adds to cart', () => {
-    // ── Shop ─────────────────────────────────────────────────────────────────
+  it('browses the shop and Amazon CTA', () => {
+    // ── Shop (recomendaciones → Amazon) ─────────────────────────────────────
     cy.visit('/shop');
     cy.demoPause(1200);
 
     cy.get('body').should('be.visible');
     cy.demoPause(1000);
 
-    // Scroll para mostrar los productos de la tienda
     cy.scrollTo('bottom', { duration: 2500 });
     cy.demoPause(1000);
     cy.scrollTo('top', { duration: 1000 });
     cy.demoPause(600);
 
-    // Agregar primer producto al carrito si hay botón
-    cy.get('button').contains(/add to cart|agregar|add/i)
+    cy.get('[data-testid="shop-product-card"]')
       .first()
-      .then(($btn) => {
-        if ($btn.length) {
-          cy.wrap($btn).click();
+      .then(($card) => {
+        if ($card.length) {
+          cy.wrap($card).within(() => {
+            cy.contains('a', /view on amazon/i).first().should('have.attr', 'target', '_blank');
+            cy.contains('a', /view on amazon/i).first().should('have.attr', 'rel', 'nofollow sponsored');
+          });
           cy.demoPause(1000);
         }
       });
 
-    // ── Ir al carrito ────────────────────────────────────────────────────────
-    cy.visit('/cart');
-    cy.demoPause(1200);
-
-    cy.scrollTo('bottom', { duration: 1500 });
+    cy.contains('As an Amazon Associate').should('be.visible');
     cy.demoPause(800);
-    cy.scrollTo('top', { duration: 800 });
-    cy.demoPause(1000);
   });
 });

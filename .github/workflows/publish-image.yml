@@ -2,7 +2,7 @@ name: Publish Frontend Image
 
 on:
   push:
-    branches: [ production ]
+    branches: [production]
 
 permissions:
   contents: read

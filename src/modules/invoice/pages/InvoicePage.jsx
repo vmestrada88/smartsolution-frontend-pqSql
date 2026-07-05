@@ -109,14 +109,14 @@ export const InvoicePage = () => {
 
         const normalizedItems = Array.isArray(proposal.items)
           ? proposal.items.map((item) => ({
-              _id: item.productId ?? item.product?.id,
-              id: item.productId ?? item.product?.id,
-              name: item.name || item.product?.name || 'Item',
-              description: item.description || item.product?.description || '',
-              category: item.product?.category || '',
-              priceSell: Number(item.unitPrice || item.product?.priceSell || 0),
-              quantity: Number(item.quantity || 1)
-            }))
+            _id: item.productId ?? item.product?.id,
+            id: item.productId ?? item.product?.id,
+            name: item.name || item.product?.name || 'Item',
+            description: item.description || item.product?.description || '',
+            category: item.product?.category || '',
+            priceSell: Number(item.unitPrice || item.product?.priceSell || 0),
+            quantity: Number(item.quantity || 1)
+          }))
           : [];
 
         setSelectedItems(normalizedItems);

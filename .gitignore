@@ -19,6 +19,10 @@ yarn-error.log*
 # Coverage
 coverage/
 
+# Cypress artifacts
+cypress/videos/
+cypress/screenshots/
+
 # Editor / OS
 .DS_Store
 Thumbs.db

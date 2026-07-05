@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 export default function InvoiceList() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all'); // all, paid, pending
+  const [filter, setFilter] = useState('all'); // all, settled, open (legacy: stripePaymentId = reference on file)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,9 +33,11 @@ export default function InvoiceList() {
     }
   };
 
-  const filteredInvoices = invoices.filter(invoice => {
-    if (filter === 'paid') return invoice.stripePaymentId;
-    if (filter === 'pending') return !invoice.stripePaymentId;
+  const hasPaymentRef = (inv) => inv?.stripePaymentId != null && String(inv.stripePaymentId).trim() !== '';
+
+  const filteredInvoices = invoices.filter((invoice) => {
+    if (filter === 'settled') return hasPaymentRef(invoice);
+    if (filter === 'open') return !hasPaymentRef(invoice);
     return true;
   });
 
@@ -90,24 +92,24 @@ export default function InvoiceList() {
           All ({invoices.length})
         </button>
         <button
-          onClick={() => setFilter('paid')}
+          onClick={() => setFilter('settled')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            filter === 'paid'
+            filter === 'settled'
               ? 'bg-green-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          Paid ({invoices.filter(i => i.stripePaymentId).length})
+          Settled ({invoices.filter(hasPaymentRef).length})
         </button>
         <button
-          onClick={() => setFilter('pending')}
+          onClick={() => setFilter('open')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            filter === 'pending'
+            filter === 'open'
               ? 'bg-yellow-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          Pending ({invoices.filter(i => !i.stripePaymentId).length})
+          Open ({invoices.filter((i) => !hasPaymentRef(i)).length})
         </button>
       </div>
 
@@ -178,37 +180,29 @@ export default function InvoiceList() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {invoice.stripePaymentId ? (
+                    {hasPaymentRef(invoice) ? (
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
-                        Paid
+                        Settled
                       </span>
                     ) : (
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                         <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                         </svg>
-                        Pending
+                        Open
                       </span>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link
                       to={`/invoices/${invoice.id}`}
-                      className="text-blue-600 hover:text-blue-900 mr-3"
+                      className="text-blue-600 hover:text-blue-900"
                     >
                       View
                     </Link>
-                    {!invoice.stripePaymentId && (
-                      <Link
-                        to={`/invoices/${invoice.id}`}
-                        className="text-green-600 hover:text-green-900"
-                      >
-                        Pay
-                      </Link>
-                    )}
                   </td>
                 </tr>
               ))}
